@@ -1,0 +1,65 @@
+/* Pagina aggiunta animale */
+
+.add-animal-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .add-animal-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    color: #000;
+  }
+  
+  .add-animal-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .add-animal-form label {
+    font-weight: 600;
+    color: #000;
+  }
+  
+  .add-animal-form input[type=\"text\"],
+  .add-animal-form input[type=\"file\"] {
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+  }
+  
+  .file-upload-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .file-upload-wrapper i {
+    font-size: 1.5em;
+    color: #3cbcb1;
+  }
+  
+  .save-button {
+    background-color: #bcb88a;
+    color: #000;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-button:hover {
+    background-color: #a8a36e;
+  }
+  

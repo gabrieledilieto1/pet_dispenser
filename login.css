@@ -1,0 +1,91 @@
+/* Stili esistenti */
+main{
+    font-family: 'Montserrat', sans-serif;
+    background-color: white;
+}
+video{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0.5;
+    z-index: -1;
+}
+main > div{
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+}
+div > form{
+    width: 90%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+form > p{
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+form input{
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px 0;
+    border-bottom: 1px solid #ccc;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+.submit_button {
+    background-color: #0A2239;
+    color: white;
+    border-radius: 10px;
+    width: 12vw;
+    height: auto;
+    cursor: pointer;
+}
+button{
+    background-color: darkred;
+    color: white;
+    border-radius: 10px;
+    width: 12vw;
+    height: 5vh;
+    cursor: pointer;
+    margin-bottom: 10vh;
+}
+form label > img{
+    cursor: pointer;
+}
+
+/* Media query per dispositivi mobili */
+@media (max-width: 768px) {
+    main{
+        width: 100%;
+    }
+    main > div{
+        width: 95%;
+        align-items: center;
+        justify-content: center;
+    }
+    .submit_button, button {
+        width: 50vw;
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    form input {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    form label > img {
+        width: 15px;
+    }
+}
