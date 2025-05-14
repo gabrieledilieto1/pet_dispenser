@@ -1,3 +1,9 @@
+
+<?php
+session_start();
+?>
+
+
 <html>
     <head>
         <title>Smart Pet Feeder</title>
@@ -16,9 +22,16 @@
     <section class="intro-section">
       <h1>Benvenuto in Smart Pet Feeder</h1>
       <p>Controlla e programma l’alimentazione del tuo animale domestico ovunque tu sia.</p>
-      <a href="dashboard.php" class="cta-button">
-        Vai alla Dashboard <i class="fas fa-arrow-right"></i>
-      </a>
+      <?php if (isset($_SESSION['username'])): ?>
+     <a href="dashboard.php" class="cta-button">
+     Vai alla Dashboard <i class="fas fa-arrow-right"></i>
+    </a>
+    <?php else: ?>
+     <a href="login.php" class="cta-button">
+    Effettua il login per iniziare <i class="fas fa-sign-in-alt"></i>
+    </a>
+    <?php endif; ?>
+
     </section>
 
     <section class="features-section">

@@ -89,9 +89,6 @@
   .nav-links li:hover > .dropdown-menu {
     display: block;
   }
-  .nav-links li:last-of-type:hover > .dropdown-menu{
-    display: none;
-  }
   .nav-links #logged:hover > .dropdown-menu{
     display: block;
   }
