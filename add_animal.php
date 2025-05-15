@@ -21,6 +21,15 @@
       <label for="animal-name">Nome animale:</label>
       <input type="text" id="animal-name" name="animal_name" required>
 
+      <label for="animal-age">Età (anni):</label>
+      <input type="number" id="animal-age" name="animal_age" min="0" required>
+
+      <label for="animal-weight">Peso (kg):</label>
+      <input type="number" step="0.01" id="animal-weight" name="animal_weight" min="0" required>
+
+      <label for="animal-breed">Razza:</label>
+      <input type="text" id="animal-breed" name="animal_breed" required>
+
       <label for="animal-photo">Aggiungi allegato:</label>
       <div class="file-upload-wrapper">
         <input type="file" id="animal-photo" name="animal_photo" accept="image/*" required>

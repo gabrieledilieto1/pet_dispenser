@@ -1,6 +1,6 @@
 <?php
 session_start();
-require './db.php'; // contiene la connessione: $db = pg_connect(...);
+require './db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // LOGIN
@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             if (password_verify($pass, $hash)) {
                 $_SESSION['username'] = $user;
+                $_SESSION['user_id'] = get_id($user, $db); // 👈 SALVA ID UTENTE
                 $_SESSION['nome'] = get_field($user, 'nome', $db);
                 $_SESSION['cognome'] = get_field($user, 'cognome', $db);
                 $_SESSION['mail'] = get_field($user, 'email', $db);
@@ -59,6 +60,15 @@ function get_field($user, $field, $db) {
     $res = pg_query_params($db, $sql, [$user]);
     if ($row = pg_fetch_assoc($res)) {
         return $row[$field];
+    }
+    return false;
+}
+
+function get_id($user, $db) {
+    $sql = "SELECT id FROM account WHERE username = $1";
+    $res = pg_query_params($db, $sql, [$user]);
+    if ($row = pg_fetch_assoc($res)) {
+        return $row['id'];
     }
     return false;
 }

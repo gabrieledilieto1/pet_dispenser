@@ -1,0 +1,101 @@
+/* Stile per dispenser_settings.php */
+
+.dispenser-settings-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .dispenser-settings-container h2,
+  .dispenser-settings-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .add-schedule-form,
+  .existing-schedules {
+    margin-bottom: 40px;
+  }
+  
+  .add-schedule-form form,
+  .existing-schedules table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .add-schedule-form input,
+  .existing-schedules input {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .add-schedule-form button,
+  .existing-schedules button {
+    padding: 8px 16px;
+    background-color: #bcb88a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-schedule-form button:hover,
+  .existing-schedules button:hover {
+    background-color: #a8a36e;
+  }
+  
+  .existing-schedules table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .existing-schedules th,
+  .existing-schedules td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .existing-schedules form {
+    display: inline;
+  }
+  
+  input[type="checkbox"] {
+    transform: scale(1.2);
+  }
+
+  /* Stile per il messaggio di feedback */
+  .feedback {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .feedback.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .feedback.warning {
+    background-color: #ffe3e3;
+    color: #a80000;
+    border: 1px solid #ffc2c2;
+  }
+  
+  .existing-schedules tr.inactive {
+    background-color: #f4f4f4;
+    color: #999;
+    font-style: italic;
+  }
+  
