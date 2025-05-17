@@ -1,0 +1,115 @@
+[
+  {
+    "id": "inject-trigger",
+    "type": "inject",
+    "z": "flow-1",
+    "name": "Ogni minuto",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic"
+      }
+    ],
+    "repeat": "60",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "5",
+    "topic": "",
+    "payload": "1",
+    "payloadType": "num",
+    "x": 120,
+    "y": 100,
+    "wires": [
+      [
+        "set-animal-id"
+      ]
+    ]
+  },
+  {
+    "id": "set-animal-id",
+    "type": "change",
+    "z": "flow-1",
+    "name": "Set animal_id",
+    "rules": [
+      {
+        "t": "set",
+        "p": "animal_id",
+        "pt": "flow",
+        "to": "12",
+        "tot": "num"
+      }
+    ],
+    "x": 320,
+    "y": 100,
+    "wires": [
+      [
+        "pg-query"
+      ]
+    ]
+  },
+  {
+    "id": "pg-query",
+    "type": "postgresql",
+    "z": "flow-1",
+    "name": "Leggi orari dal DB",
+    "query": "SELECT schedule_time, portion_grams, proximity_enabled, manual_mode FROM dispenser_schedules WHERE animal_id = $1 AND active = true ORDER BY schedule_time",
+    "postgreSQLConfig": "pg-config",
+    "outputs": 1,
+    "x": 550,
+    "y": 100,
+    "wires": [
+      [
+        "format-json"
+      ]
+    ]
+  },
+  {
+    "id": "format-json",
+    "type": "function",
+    "z": "flow-1",
+    "name": "Formatta JSON",
+    "func": "\nmsg.topic = \"petfeeder/\" + flow.get(\"animal_id\") + \"/settings\";\nmsg.payload = msg.payload.map(row => ({\n    time: row.schedule_time,\n    grams: row.portion_grams,\n    proximity: row.proximity_enabled,\n    manual: row.manual_mode\n}));\nreturn msg;\n",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 790,
+    "y": 100,
+    "wires": [
+      [
+        "mqtt-out"
+      ]
+    ]
+  },
+  {
+    "id": "mqtt-out",
+    "type": "mqtt out",
+    "z": "flow-1",
+    "name": "Pubblica su MQTT",
+    "topic": "",
+    "qos": "",
+    "retain": "",
+    "broker": "mqtt-config",
+    "x": 1010,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "pg-config",
+    "type": "postgresql-config",
+    "name": "PostgreSQL",
+    "hostname": "localhost",
+    "port": "5432",
+    "db": "pet_feeder",
+    "ssl": false
+  },
+  {
+    "id": "mqtt-config",
+    "type": "mqtt-broker",
+    "name": "MQTT",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "",
+    "usetls": false
+  }
+]

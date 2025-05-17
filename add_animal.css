@@ -74,3 +74,18 @@
 .save-button:hover {
   background-color: #a8a36e;
 }
+
+.cta-button {
+  display: inline-block;
+  background-color: #5e5a5c;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #3b3a3c;
+}

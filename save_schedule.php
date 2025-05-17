@@ -11,16 +11,26 @@ $animal_id = (int) $_POST['animal_id'];
 $schedule_time = $_POST['schedule_time'];
 $portion = (int) $_POST['portion_grams'];
 
-// ✅ Conversione sicura per PostgreSQL
-$proximity = isset($_POST['proximity_enabled']) ? 'true' : 'false';
-$manual = isset($_POST['manual_mode']) ? 'true' : 'false';
+// ✅ Lettura coerente dei valori checkbox come stringhe
+$proximity = ($_POST['proximity_enabled'] === 'true') ? 'true' : 'false';
+$manual = ($_POST['manual_mode'] === 'true') ? 'true' : 'false';
+$active = ($_POST['active'] === 'true') ? 'true' : 'false';
 
-$sql = "INSERT INTO dispenser_schedules (animal_id, schedule_time, portion_grams, proximity_enabled, manual_mode)
-        VALUES ($1, $2, $3, $4, $5)";
-$res = pg_query_params($db, $sql, [$animal_id, $schedule_time, $portion, $proximity, $manual]);
+// Inserimento nel database
+$sql = "INSERT INTO dispenser_schedules (animal_id, schedule_time, portion_grams, proximity_enabled, manual_mode, active)
+        VALUES ($1, $2, $3, $4, $5, $6)";
 
-if (!$res) {
-  echo "Errore durante l'inserimento: " . pg_last_error($db);
+$ret = pg_query_params($db, $sql, [
+  $animal_id,
+  $schedule_time,
+  $portion,
+  $proximity,
+  $manual,
+  $active
+]);
+
+if (!$ret) {
+  echo "Errore nella query: " . pg_last_error($db);
   exit();
 }
 

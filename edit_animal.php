@@ -94,6 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="save-button">SALVA MODIFICHE</button>
       </form>
     </section>
+    <div style="text-align: center; margin-top: 30px;">
+    <a href="dashboard.php" class="cta-button">← Torna alla Dashboard</a>
+    </div>
+
   </main>
 
   <?php include 'footer.php'; ?>
