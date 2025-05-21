@@ -53,10 +53,16 @@ session_start();
           <p>Rileva la presenza dell'animale e anticipa l’erogazione se necessario.</p>
         </div>
         <div class="feature-card">
-          <i class="fas fa-chart-line"></i>
+         <i class="fas fa-chart-line"></i>
           <h3>Statistiche & Storico</h3>
           <p>Monitora il consumo del cibo e le abitudini del tuo animale.</p>
-        </div>
+          <?php if (isset($_SESSION['username'])): ?>
+          <a href="storico.php" class="cta-button" style="margin-top: 10px; display: inline-block;">
+          Vai allo Storico <i class="fas fa-database"></i>
+        </a>
+  <?php endif; ?>
+</div>
+
       </div>
     </section>
     <section class="image-gallery">
