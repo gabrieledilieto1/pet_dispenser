@@ -83,15 +83,15 @@ $schedules = pg_fetch_all($res);
                 <td><input type="number" name="portion_grams" value="<?php echo $s['portion_grams']; ?>" required></td>
                 <td>
                   <input type="hidden" name="proximity_enabled" value="false">
-                  <input type="checkbox" name="proximity_enabled" value="true" <?php echo $s['proximity_enabled'] ? 'checked' : ''; ?>>
+                  <input type="checkbox" name="proximity_enabled" value="true" <?php echo ($s['proximity_enabled'] === 't' || $s['proximity_enabled'] === '1') ? 'checked' : ''; ?>>
                 </td>
                 <td>
                   <input type="hidden" name="manual_mode" value="false">
-                  <input type="checkbox" name="manual_mode" value="true" <?php echo $s['manual_mode'] ? 'checked' : ''; ?>>
+                  <input type="checkbox" name="manual_mode" value="true" <?php echo ($s['manual_mode'] === 't' || $s['manual_mode'] === '1') ? 'checked' : ''; ?>>
                 </td>
                 <td>
                   <input type="hidden" name="active" value="false">
-                  <input type="checkbox" name="active" value="true" <?php echo $s['active'] ? 'checked' : ''; ?>>
+                  <input type="checkbox" name="active" value="true" <?php echo ($s['active'] === 't' || $s['active'] === '1') ? 'checked' : ''; ?>>
                 </td>
                 <td>
                   <button type="submit">Salva</button>
