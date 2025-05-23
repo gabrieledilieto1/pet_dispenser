@@ -48,8 +48,9 @@ usort($logs, function($a, $b) {
     <title>Storico Log</title>
 </head>
 <body>
-    <h1>Storico Log</h1>
-
+<div class="page-wrapper">
+    <main class="content">
+        <h1>Storico Log</h1>
     <form method="GET">
         <label>Animale:
             <select name="animal_id">
@@ -101,7 +102,8 @@ usort($logs, function($a, $b) {
             <?php endforeach; ?>
         </table>
     <?php endif; ?>  
+ </main>
+    <?php include 'footer.php'; ?>
+</div>
 </body>
-<?php include 'footer.php'; ?>
-
 </html>

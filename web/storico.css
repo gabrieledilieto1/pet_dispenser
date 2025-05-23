@@ -74,6 +74,20 @@ tr:hover {
     background-color: #efefef;
 }
 
+html, body {
+    height: 100%;
+}
+
+.page-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
 /* Responsive layout */
 @media screen and (max-width: 768px) {
     table, thead, tbody, th, td, tr {

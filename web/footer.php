@@ -25,4 +25,5 @@
             ©2025 FOOD DISPENSER - Tutti i diritti riservati.
         
     </div>
+</footer>
 </html>

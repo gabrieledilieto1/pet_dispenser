@@ -112,7 +112,6 @@ $schedules = pg_fetch_all($res);
     <a href="dashboard.php" class="cta-button">← Torna alla Dashboard</a>
   </div>
 </main>
-
-<?php include 'footer.php'; ?>
 </body>
+<?php include 'footer.php'; ?>
 </html>
