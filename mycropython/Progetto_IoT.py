@@ -9,8 +9,8 @@ from umqtt.simple import MQTTClient
 # --- Configurazione OLED ---
 WIDTH = 128
 HEIGHT = 64
-SCL_PIN = 22
-SDA_PIN = 21
+SCL_PIN = 17
+SDA_PIN = 16
 i2c = I2C(0, scl=Pin(SCL_PIN), sda=Pin(SDA_PIN))
 display = ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c)
 
@@ -19,22 +19,40 @@ pet_feeder_logo = bytearray(b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x
 
 # --- Logo Wi-Fi (devi sostituire con un vero bytearray) ---
 wifi_logo = bytearray([
-    0x00,0x00,0x18,0x18,0x24,0x24,0x42,0x42,0x81,0x81,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x7e,0x7e,0x42,0x42,0x42,0x42,0x42,0x42,0x7e,0x7e,0x00,0x00,0x00,0x00
-])  # 16x16 pixels, adattalo al bisogno
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x81,0x03,0x07,0x0E,0x1C,0x38,
+    0x70,0xE0,0xC0,0x81,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x80,0x01,0x03,0x07,
+    0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x80,0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,
+    0xC0,0x80,0x00,0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x80,0x00,0x00,
+    0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x00,0x00,0x00,0x00,0x01,0x03,
+    0x07,0x0E,0x1C,0x38,0x70,0xE0,0xC0,0x00,0x00,0x00,0x00,0x01,0x03,0x07,0x0E,0x1C,
+    0x38,0x70,0xE0,0xC0,0x00,0x00,0x00,0x00,0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,
+    0xE0,0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x03,0x07,0x0E,0x1C,0x38,0x70,0xE0,
+    0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+]) # 16x16 pixels, adattalo al bisogno
 
 # --- Funzioni per mostrare immagini e testo ---
-def show_image(buffer, w=128, h=64, x=0, y=0):
-    fb = framebuf.FrameBuffer(buffer, w, h, framebuf.MONO_HLSB)
+def draw_main_screen():
+    global battery_voltage
     display.fill(0)
-    display.blit(fb, x, y)
+    fb_logo = framebuf.FrameBuffer(pet_feeder_logo, 128, 64, framebuf.MONO_HLSB)
+    display.blit(fb_logo, 0, 0)
+    fb_wifi = framebuf.FrameBuffer(wifi_logo, 16, 16, framebuf.MONO_HLSB)
+    display.blit(fb_wifi, WIDTH - 16, 0)  # in alto a destra
+    # Mostra tensione batteria in basso a destra
+    display.text("Batt: {:.2f}V".format(battery_voltage), WIDTH - 58, HEIGHT - 10)
     display.show()
 
-def show_text(lines):
+def show_dispense_message():
     display.fill(0)
-    for i, line in enumerate(lines):
-        display.text(line, 0, i*10)
+    display.text("Erogazione in corso...", 10, 28)
     display.show()
+    time.sleep(2)
+    draw_main_screen()
 
 
 # --- Sensori e periferiche ---
@@ -70,12 +88,18 @@ class ServoDispenser:
         self.servo = PWM(Pin(pin_num), freq=50)
         
     def dispense(self):
+        for duty in range(40, 116, 5):  # da 40 a 115 con step 5
+            self.servo.duty(duty)
+            time.sleep(0.05)  
+        time.sleep(2) 
+
+        for duty in range(115, 39, -5):  # da 115 a 40 con step -5
+            self.servo.duty(duty)
+            time.sleep(0.05)
+
+    # Assicura che servo sia a posizione chiusa
         self.servo.duty(40)
-        time.sleep(0.5)
-        self.servo.duty(115)
-        time.sleep(0.5)
-        self.servo.duty(40)
-        time.sleep(0.5)
+        time.sleep(0.2)
 
 
 class BuzzerManager:
@@ -110,8 +134,7 @@ class WiFiManager:
                 raise RuntimeError("Timeout connessione Wi-Fi")
             time.sleep(1)
         print('Connesso a Wi-Fi:', wlan.ifconfig())
-        show_image(wifi_logo, w=16, h=16, x=WIDTH//2 - 8, y=HEIGHT//2 - 8)
-
+       
 
 class BatteryMonitor:
     def __init__(self, adc_pin, r1, r2):
@@ -164,11 +187,11 @@ class SmartPetFeeder:
         self.ultra_food = UltrasonicSensor(12, 13)
         self.servo = ServoDispenser(18)
         self.buzzer = BuzzerManager(21, 22)
-        self.wifi = WiFiManager('TUO_SSID', 'TUA_PASSWORD')
+        self.wifi = WiFiManager('WINDTRE-070898', '2rwdvzxaw4yjdma8')
         self.batt_monitor = BatteryMonitor(adc_pin=34, r1=100000, r2=100000)
         self.mqtt = MQTTManager(
-            client_id='pet_feeder_esp32',
-            broker_ip='IP_DEL_BROKER',
+            client_id='petfeeder',
+            broker_ip='broker.hivemq.com',
             topic_cmd=b'/petfeeder/cmd',
             topic_status=b'/petfeeder/status',
             topic_alert=b'/petfeeder/alert',
@@ -178,8 +201,6 @@ class SmartPetFeeder:
         self.last_button_state = self.button.value()
         
     def setup(self):
-        show_image(pet_feeder_logo)
-        time.sleep(2)
         self.wifi.connect()
         self.mqtt.connect()
         
@@ -191,7 +212,7 @@ class SmartPetFeeder:
             self.mqtt.publish_alert(b'Accumulo rilevato!')
         self.mqtt.publish_status(b'Erogazione completata.')
         print("Erogazione completata.")
-        show_text(["Erogazione completata"])
+        show_dispense_message()
         
     def check_proximity(self):
         try:
@@ -216,9 +237,9 @@ class SmartPetFeeder:
             pass
         
     def check_battery(self):
-        voltage = self.batt_monitor.read_voltage()
-        print("Tensione batteria:", voltage)
-        show_text([f"Tensione batt:", "{:.2f} V".format(voltage)])
+        global battery_voltage
+        battery_voltage = self.batt_monitor.read_voltage()
+        print("Tensione batteria:", battery_voltage)
         
     def check_button(self):
         current_state = self.button.value()
@@ -234,6 +255,7 @@ class SmartPetFeeder:
             self.check_food_level()
             self.check_battery()
             self.check_button()
+            draw_main_screen()
             time.sleep(1)
 
 # --- MAIN ---
