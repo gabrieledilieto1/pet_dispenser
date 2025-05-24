@@ -133,4 +133,20 @@
   .delete-button:hover {
     background-color: #a61c2b;
   }
+  .manual-dispense {
+    background-color: #bcb88a;
+    color: #000;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  .manual-dispense:hover {
+    background-color: #a8a36e;
+  }
   

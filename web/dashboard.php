@@ -94,10 +94,31 @@ if ($result && pg_num_rows($result) > 0) {
         <?php endforeach; ?>
       <?php endif; ?>
     </section>
+          <!-- Sezione Erogazione Manuale -->
+    <section class="manual-dispense">
+        <h2>Erogazione Manuale</h2>
+        <button onclick="manualFeed()">Eroga Ora</button>
+    </section>
   </main>
 
   <!-- Footer comune -->
   <footer>
     <?php include 'footer.php'; ?>
   </footer>
+
+  <!-- Script MQTT per erogazione manuale -->
+  <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+  <script>
+    const client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "webClient_" + parseInt(Math.random() * 10000));
+
+    client.connect({ onSuccess: () => console.log("MQTT connesso!") });
+
+     function manualFeed() {
+      const message = new Paho.MQTT.Message("manual_feed");
+      message.destinationName = "/petfeeder/manual";
+      client.send(message);
+      alert("Comando inviato!\nCibo erogato manualmente.");
+    }
+  </script>
+
 </html>
