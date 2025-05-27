@@ -6,9 +6,9 @@
         <link rel="stylesheet" href="footer.css">
     </head>
 
-    <body>
-<footer>
-    <div class="footer-container">
+  <body>
+     <footer>
+      <div class="footer-container">
         <div class="hashtags">
             <span>#LETSGETYOURFOOD</span>
         </div>
@@ -18,12 +18,14 @@
         <div class="hashtags">
             <span>#LETSGETYOURFOOD</span>
         </div>
-    </div>
+     </div>
 
     
         <div class="copyright">
             ©2025 FOOD DISPENSER - Tutti i diritti riservati.
         
-    </div>
-</footer>
+        </div>
+    </footer>
+    
+  </body>
 </html>

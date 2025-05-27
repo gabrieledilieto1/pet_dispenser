@@ -105,15 +105,7 @@ if ($result && pg_num_rows($result) > 0) {
         <?php endif; ?>
       </section>
 
-      <!-- Sezione Programmazione Erogazione -->
-      <section class="schedule-section">
-          <h2>Programma erogazione</h2>
-          <label for="feedTime">Orario (HH:MM):</label>
-          <input type="time" id="feedTime">
-          <button onclick="sendTime()">Programma</button>
-      </section>
     </main>
-
     <?php include 'footer.php'; ?>
   </body>
 </html>
