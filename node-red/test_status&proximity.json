@@ -1,0 +1,192 @@
+[
+    {
+        "id": "39672bc88028d641",
+        "type": "tab",
+        "label": "Test Status & Proximity",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "23b3beaed8e2b8b8",
+        "type": "inject",
+        "z": "39672bc88028d641",
+        "name": "Simula status",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"grams\":50}",
+        "payloadType": "json",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "9eb6c8146f7e37e5"
+            ]
+        ]
+    },
+    {
+        "id": "9eb6c8146f7e37e5",
+        "type": "function",
+        "z": "39672bc88028d641",
+        "name": "Imposta topic status",
+        "func": "\nmsg.topic = \"dispenser/123/status\";  // sostituire 123 con l'animal_id reale\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "7040b5de22ccf6d1"
+            ]
+        ]
+    },
+    {
+        "id": "7040b5de22ccf6d1",
+        "type": "mqtt out",
+        "z": "39672bc88028d641",
+        "name": "Invia status MQTT",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7c7401bf8fc6921",
+        "x": 550,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "0b18c509d08d5d2a",
+        "type": "inject",
+        "z": "39672bc88028d641",
+        "name": "Simula prossimità",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"detected\":true}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "497d62fd99fed706"
+            ]
+        ]
+    },
+    {
+        "id": "497d62fd99fed706",
+        "type": "function",
+        "z": "39672bc88028d641",
+        "name": "Imposta topic proximity",
+        "func": "\nmsg.topic = \"dispenser/123/proximity\";  // sostituire 123 con l'animal_id reale\nreturn msg;\n",
+        "outputs": 1,
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "893ffaec2f22e0a2"
+            ]
+        ]
+    },
+    {
+        "id": "893ffaec2f22e0a2",
+        "type": "mqtt out",
+        "z": "39672bc88028d641",
+        "name": "Invia proximity MQTT",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "be12b9bfa7d3be16",
+        "x": 580,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d7c7401bf8fc6921",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "be12b9bfa7d3be16",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

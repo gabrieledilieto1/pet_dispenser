@@ -1,0 +1,98 @@
+[
+    {
+        "id": "ad365b42d1315194",
+        "type": "tab",
+        "label": "Test Allarme Infrarossi",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d2b2318eabce6fb4",
+        "type": "inject",
+        "z": "ad365b42d1315194",
+        "name": "Simula allarme",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"type\":\"accumulo\"}",
+        "payloadType": "json",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "1a56379bddcc76fd"
+            ]
+        ]
+    },
+    {
+        "id": "1a56379bddcc76fd",
+        "type": "function",
+        "z": "ad365b42d1315194",
+        "name": "Imposta topic MQTT",
+        "func": "\nmsg.topic = \"dispenser/123/alarm\"; // Sostituisci 123 con un animal_id reale se necessario\nreturn msg;\n",
+        "outputs": 1,
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "329a56ec80d2befc"
+            ]
+        ]
+    },
+    {
+        "id": "329a56ec80d2befc",
+        "type": "mqtt out",
+        "z": "ad365b42d1315194",
+        "name": "Pubblica su HiveMQ",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ed8fa09292083f31",
+        "x": 540,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "ed8fa09292083f31",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

@@ -1,0 +1,166 @@
+[
+    {
+        "id": "08dddd1bc95b3ea9",
+        "type": "tab",
+        "label": "Resync Orari Dispenser",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2ff436344d8559b4",
+        "type": "mqtt in",
+        "z": "08dddd1bc95b3ea9",
+        "name": "Resync da ESP32",
+        "topic": "dispenser/+/resync",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "7d5bdd1b4421a6a3",
+        "nl": false,
+        "rap": false,
+        "rh": "0",
+        "inputs": 0,
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "b209e1f3a34d792e"
+            ]
+        ]
+    },
+    {
+        "id": "b209e1f3a34d792e",
+        "type": "function",
+        "z": "08dddd1bc95b3ea9",
+        "name": "Estrai animal_id",
+        "func": "\nlet animal_id = msg.topic.split(\"/\")[1];\nflow.set(\"animal_id\", animal_id);\nreturn msg;\n",
+        "outputs": 1,
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "6e1def51059448b4"
+            ]
+        ]
+    },
+    {
+        "id": "6e1def51059448b4",
+        "type": "postgresql",
+        "z": "08dddd1bc95b3ea9",
+        "name": "Leggi orari dal DB",
+        "query": "SELECT schedule_time, portion_grams, proximity_enabled, manual_mode FROM dispenser_schedules WHERE animal_id = $1 AND active = true ORDER BY schedule_time",
+        "postgreSQLConfig": "af8497a6e54a4701",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "c3189d4dab07af41"
+            ]
+        ]
+    },
+    {
+        "id": "c3189d4dab07af41",
+        "type": "function",
+        "z": "08dddd1bc95b3ea9",
+        "name": "Formatta settings per MQTT",
+        "func": "\nconst id = flow.get('animal_id');\nmsg.topic = `dispenser/${id}/settings`;\nmsg.payload = msg.payload.map(e => ({\n    time: e.schedule_time,\n    grams: e.portion_grams,\n    proximity: e.proximity_enabled,\n    manual: e.manual_mode\n}));\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 100,
+        "wires": [
+            [
+                "a9557993c3ac3d82"
+            ]
+        ]
+    },
+    {
+        "id": "a9557993c3ac3d82",
+        "type": "mqtt out",
+        "z": "08dddd1bc95b3ea9",
+        "name": "Invia settings a ESP32",
+        "topic": "",
+        "broker": "hivemq_config",
+        "x": 1050,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "7d5bdd1b4421a6a3",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "af8497a6e54a4701",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "hivemq_config",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "nodered-web",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 15,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthQos": "0",
+        "willQos": "0"
+    }
+]

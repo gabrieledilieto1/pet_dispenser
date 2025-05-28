@@ -1,0 +1,22 @@
+[
+    {
+        "id": "152c3c899bd2bd37",
+        "type": "function",
+        "z": "5345f335dfd94a5e",
+        "name": "Parse e salva log",
+        "func": "\nconst animal_id = msg.topic.split(\"/\")[1];\nconst payload = JSON.parse(msg.payload);\nmsg.params = [animal_id, payload.type || 'generic'];\nmsg.query = \"INSERT INTO alarm_log (animal_id, alarm_type) VALUES ($1, $2)\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "fe45ea78a4c1766f"
+            ]
+        ]
+    }
+]
