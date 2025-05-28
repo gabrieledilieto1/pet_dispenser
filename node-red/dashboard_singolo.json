@@ -1,0 +1,359 @@
+[
+    {
+        "id": "a6b79f835b800d4e",
+        "type": "tab",
+        "label": "Dashboard Allarmi",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a6d65999dac77a60",
+        "type": "inject",
+        "z": "a6b79f835b800d4e",
+        "name": "Aggiorna allarmi",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "4526a9cbe55a39da"
+            ]
+        ]
+    },
+    {
+        "id": "4526a9cbe55a39da",
+        "type": "postgresql",
+        "z": "a6b79f835b800d4e",
+        "name": "SELECT da alarm_log",
+        "query": "SELECT animal_id, alarm_type, timestamp FROM alarm_log ORDER BY timestamp DESC LIMIT 20",
+        "postgreSQLConfig": "7728385c8832645a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 330,
+        "y": 80,
+        "wires": [
+            [
+                "3e969ce7421722da"
+            ]
+        ]
+    },
+    {
+        "id": "3e969ce7421722da",
+        "type": "function",
+        "z": "a6b79f835b800d4e",
+        "name": "Formatta per ui_table",
+        "func": "\nmsg.ui_control = {\n    tabulator: {\n        columns: [\n            {title: \"Animale\", field: \"animal_id\"},\n            {title: \"Tipo Allarme\", field: \"alarm_type\"},\n            {title: \"Data/Ora\", field: \"timestamp\"}\n        ]\n    }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 80,
+        "wires": [
+            [
+                "2b08dbc814db480c"
+            ]
+        ]
+    },
+    {
+        "id": "2b08dbc814db480c",
+        "type": "ui_table",
+        "z": "a6b79f835b800d4e",
+        "group": "25dae4406cdc552a",
+        "name": "Log Allarmi",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "x": 810,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "36e8f76ea7c86fb6",
+        "type": "inject",
+        "z": "a6b79f835b800d4e",
+        "name": "Aggiorna prossimità",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "451695b35747de42"
+            ]
+        ]
+    },
+    {
+        "id": "fa63c8f114884ff2",
+        "type": "function",
+        "z": "a6b79f835b800d4e",
+        "name": "Formatta per ui_table",
+        "func": "\nmsg.ui_control = {\n    tabulator: {\n        columns: [\n            {title: \"Animale\", field: \"animal_id\"},\n            {title: \"Rilevato\", field: \"detected\"},\n            {title: \"Data/Ora\", field: \"timestamp\"}\n        ]\n    }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "x": 580,
+        "y": 200,
+        "wires": [
+            [
+                "ade3a7eb43a52a10"
+            ]
+        ]
+    },
+    {
+        "id": "ade3a7eb43a52a10",
+        "type": "ui_table",
+        "z": "a6b79f835b800d4e",
+        "group": "ui_group_prox",
+        "name": "Log Prossimità",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "x": 810,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "451695b35747de42",
+        "type": "postgresql",
+        "z": "a6b79f835b800d4e",
+        "name": "",
+        "query": "SELECT animal_id, detected, timestamp FROM proximity_log ORDER BY timestamp DESC LIMIT 20",
+        "postgreSQLConfig": "84af94c7cb179717",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 350,
+        "y": 240,
+        "wires": [
+            [
+                "fa63c8f114884ff2"
+            ]
+        ]
+    },
+    {
+        "id": "c5598879084c1984",
+        "type": "inject",
+        "z": "a6b79f835b800d4e",
+        "name": "Aggiorna tabella",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "dcb3d3c2b5865d11"
+            ]
+        ]
+    },
+    {
+        "id": "62fd1e96b0855080",
+        "type": "function",
+        "z": "a6b79f835b800d4e",
+        "name": "Formatta per ui_table",
+        "func": "\nmsg.ui_control = {\n    tabulator: {\n        columns: [\n            {title: \"Animale\", field: \"animal_id\"},\n            {title: \"Quantità (g)\", field: \"grams\"},\n            {title: \"Data/Ora\", field: \"delivered_at\"}\n        ]\n    }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "0c304f85834b4fc6"
+            ]
+        ]
+    },
+    {
+        "id": "0c304f85834b4fc6",
+        "type": "ui_table",
+        "z": "a6b79f835b800d4e",
+        "group": "ui_group_logs",
+        "name": "Log Erogazioni",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "columns": [],
+        "outputs": 0,
+        "x": 810,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "dcb3d3c2b5865d11",
+        "type": "postgresql",
+        "z": "a6b79f835b800d4e",
+        "name": "",
+        "query": "SELECT animal_id, grams, delivered_at FROM dispenser_logs ORDER BY delivered_at DESC LIMIT 20",
+        "postgreSQLConfig": "c222502f4e7e0e0f",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 330,
+        "y": 420,
+        "wires": [
+            [
+                "62fd1e96b0855080"
+            ]
+        ]
+    },
+    {
+        "id": "7728385c8832645a",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "25dae4406cdc552a",
+        "type": "ui_group",
+        "name": "Allarmi",
+        "tab": "94c8026591c1b6ea",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui_group_prox",
+        "type": "ui_group",
+        "name": "Prossimità",
+        "tab": "ui_tab_prox",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "84af94c7cb179717",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "ui_group_logs",
+        "type": "ui_group",
+        "name": "Erogazioni",
+        "tab": "ui_tab_logs",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c222502f4e7e0e0f",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "94c8026591c1b6ea",
+        "type": "ui_tab",
+        "name": "Allarmi",
+        "icon": "warning",
+        "order": 3
+    },
+    {
+        "id": "ui_tab_prox",
+        "type": "ui_tab",
+        "name": "Presenza",
+        "icon": "eye",
+        "order": 2
+    },
+    {
+        "id": "ui_tab_logs",
+        "type": "ui_tab",
+        "name": "Log",
+        "icon": "list",
+        "order": 1
+    }
+]
