@@ -104,8 +104,25 @@ if ($result && pg_num_rows($result) > 0) {
           <?php endforeach; ?>
         <?php endif; ?>
       </section>
+      <button onclick="inviaComando()">Eroga manualmente</button>
+
 
     </main>
+    
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script>
+  const client = mqtt.connect("wss://broker.hivemq.com:8000/mqtt");
+
+  client.on("connect", () => {
+    console.log("Connesso a HiveMQ");
+  });
+
+  function inviaComando() {
+    client.publish("/petfeeder/cmd", "dispense");
+    alert("Comando inviato all'ESP32!");
+  }
+</script>
+
     <?php include 'footer.php'; ?>
   </body>
 </html>
