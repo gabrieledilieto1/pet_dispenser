@@ -1,14 +1,9 @@
-DROP TABLE IF EXISTS account CASCADE;
-DROP TABLE IF EXISTS animals CASCADE;
-DROP TABLE IF EXISTS dispenser_schedules CASCADE;
-DROP TABLE IF EXISTS dispenser_logs CASCADE;
-DROP TABLE IF EXISTS proximity_log CASCADE;
-DROP TABLE IF EXISTS alarm_log CASCADE;
--- Database: pet_dispenser
+-- PostgreSQL-compatible schema for Pet Feeder
+-- Switch to the appropriate database manually in pgAdmin if needed
 
 -- Utenti del sistema
 CREATE TABLE account (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -19,7 +14,7 @@ CREATE TABLE account (
 
 -- Animali registrati da ciascun utente
 CREATE TABLE animals (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(50) NOT NULL,
     age INT,
@@ -32,7 +27,7 @@ CREATE TABLE animals (
 
 -- Programmazione erogazione cibo
 CREATE TABLE dispenser_schedules (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     animal_id INT NOT NULL,
     schedule_time TIME NOT NULL,
     portion_grams INT NOT NULL,
@@ -45,28 +40,28 @@ CREATE TABLE dispenser_schedules (
 
 -- Log di ogni erogazione
 CREATE TABLE dispenser_logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     animal_id INT NOT NULL,
     grams INT NOT NULL,
-    delivered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    delivered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
 -- Log di eventi di prossimità
 CREATE TABLE proximity_log (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     animal_id INT NOT NULL,
     detected BOOLEAN NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
 );
 
 -- Log degli allarmi (es. accumulo cibo)
 CREATE TABLE alarm_log (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     animal_id INT,
     alarm_type VARCHAR(50) NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     handled BOOLEAN DEFAULT FALSE,
     notes TEXT,
     FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE SET NULL
