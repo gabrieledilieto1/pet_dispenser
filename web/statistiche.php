@@ -60,7 +60,7 @@ const chart = new Chart(ctx, {
         datasets: [{
             label: 'Numero rilevamenti',
             data: counts,
-            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+            backgroundColor: 'rgba(137, 49, 104)'
         }]
     },
     options: {

@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 ?>
@@ -54,19 +53,33 @@ session_start();
           </div>
           <div class="feature-card">
             <i class="fas fa-chart-line"></i>
-            <h3>Statistiche & Storico</h3>
-            <p>Monitora il consumo del cibo e le abitudini del tuo animale.</p>
+            <h3>Storico</h3>
+            <p>Monitora il consumo del cibo.</p>
             <?php if (isset($_SESSION['username'])): ?>
             <a href="storico.php" class="cta-button" style="margin-top: 10px; display: inline-block;">
-          Vai allo Storico <i class="fas fa-database"></i>
+              Vai allo Storico <i class="fas fa-database"></i>
             </a>
             <?php endif; ?>
           </div>
+          <!-- NUOVA CARD STATISTICHE -->
           <div class="feature-card">
+            <i class="fas fa-chart-pie"></i>
+            <h3>Statistiche</h3>
+            <p>Visualizza grafici e dati sull’alimentazione del tuo animale.</p>
+            <a href="statistiche.php" class="cta-button" style="margin-top: 10px; display: inline-block;">
+              Vai alle Statistiche <i class="fas fa-chart-bar"></i>
+            </a>
+          </div>
+          <!-- MODIFICA CARD NOTIFICHE INTELLIGENTI -->
+          <a href="suggerimenti.php" class="feature-card" style="text-decoration: none; color: inherit;">
             <i class="fas fa-bell"></i>
             <h3>Notifiche Intelligenti</h3>
-            <p>Ricevi avvisi quando il cibo sta per terminare o se ci sono anomalie nel funzionamento.</p>
-          </div>
+            <p>Ricevi avvisi quando il cibo sta per terminare o per anomalie nel funzionamento.<br>
+            Invia suggerimenti.</p>
+            <span class="cta-button" style="margin-top: 10px; display: inline-block;">
+              Vai ai Suggerimenti <i class="fas fa-lightbulb"></i>
+            </span>
+          </a>
           <div class="feature-card">
             <i class="fas fa-mobile-alt"></i>
             <h3>App Mobile</h3>

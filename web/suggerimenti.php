@@ -44,12 +44,10 @@ pg_close($db);
 <html lang="it">
 <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="statistiche.css">
     <title>Consigli sull'uso del dispenser</title>
     <style>
-      body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
-      .container { max-width: 700px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
-      h1 { color: #2a7ae2; }
-      .suggestion { margin-top: 20px; padding: 15px; background: #e3f2fd; border-left: 6px solid #2196f3; font-size: 1.1em; }
+      .suggestion { margin-top: 20px; padding: 15px; background:rgb(203, 208, 222); border-left: 6px solid #893168; font-size: 1.1em; }
       .metrics { margin-top: 15px; font-size: 0.9em; color: #555; }
     </style>
 </head>

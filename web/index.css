@@ -63,9 +63,18 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 30px;
+  align-items: stretch; /* Allunga le card */
 }
 
-.feature-card {
+.feature-card,
+.features-grid > a.feature-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 300px;
+  max-height: 350px;
+  height: 100%;
+  box-sizing: border-box;
   background: #ffffff;
   border-left: 8px solid #bcb88a;
   border-radius: 16px;
@@ -92,6 +101,14 @@ body {
 
 .feature-card p {
   color: #555;
+}
+
+/* Per evitare che il bottone allarghi la card */
+.feature-card .cta-button,
+.features-grid > a.feature-card .cta-button,
+.features-grid > a.feature-card span.cta-button {
+  margin-top: auto;
+  align-self: flex-start;
 }
 
 .how-it-works-section {

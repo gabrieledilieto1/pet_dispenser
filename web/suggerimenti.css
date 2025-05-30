@@ -1,0 +1,123 @@
+/* Sfondo e font */
+body {
+    background: #f6f8fa;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenitore centrale */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    padding: 32px 28px;
+}
+
+/* Titolo */
+h1, h2 {
+    color: #000000;
+    margin-bottom: 18px;
+}
+
+/* Form suggerimenti */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+label {
+    font-weight: 500;
+    color: #808a9f;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #d0d7e5;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9fbfd;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    border-color: #893168;
+    outline: none;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* Pulsante invio */
+button, .btn {
+    background: #893168;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    align-self: flex-start;
+}
+
+button:hover, .btn:hover {
+    background: #808a9f;
+}
+
+/* Messaggi di conferma o errore */
+.success, .error {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    font-weight: 500;
+}
+
+.success {
+    background: #e6f9e7;
+    color: #218838;
+    border: 1px solid #b7e4c7;
+}
+
+.error {
+    background: #fdeaea;
+    color: #c82333;
+    border: 1px solid #f5c6cb;
+}
+
+/* Lista suggerimenti */
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    background: #f2f6fa;
+    border-radius: 6px;
+    padding: 14px 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(42,122,226,0.04);
+    border-left: 4px solid #893168;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 16px 6px;
+    }
+    input, textarea, button {
+        font-size: 0.98rem;
+    }
+}
