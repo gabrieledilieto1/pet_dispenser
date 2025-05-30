@@ -1,109 +1,152 @@
 <?php
 session_start();
-require_once 'db.php'; // <-- usa db.php corretto
+
+// Controllo accesso utente
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Include connessione DB pg_connect
+require_once 'db.php';
 include 'header.php'; // Include l'header per la navigazione
 
-// Verifica login utente
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+
+// Liste colonne per tabella
+$tables = [
+    'dispenser_logs' => ['animal_id', 'grams', 'delivered_at'],
+    'alarm_log' => ['animal_id', 'alarm_type', 'timestamp'],
+    'proximity_log' => ['animal_id', 'timestamp']
+];
+
+// Tabella scelta dall’utente
+$table = $_GET['table'] ?? 'dispenser_logs';
+if (!array_key_exists($table, $tables)) {
+    $table = 'dispenser_logs';
 }
 
-// Filtri GET
+// Filtri
 $animal_id = $_GET['animal_id'] ?? '';
-$date = $_GET['date'] ?? '';
+$date_from = $_GET['date_from'] ?? '';
+$date_to = $_GET['date_to'] ?? '';
 
-// Query animali per dropdown
-$user_id = $_SESSION['user_id'];
-$animal_query = pg_query($db, "SELECT id, name FROM animals WHERE user_id = $user_id");
+// Preparazione query dinamica con parametri
+$where_clauses = [];
+$params = [];
+$param_types = '';
+$param_values = [];
 
-// Costruzione filtro
-$where = [];
-if ($animal_id) $where[] = "animal_id = " . intval($animal_id);
-if ($date) $where[] = "DATE(timestamp) = '" . pg_escape_string($db, $date) . "'";
-$where_sql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-// Raccolta log
-$logs = [];
-$tables = ['dispenser_logs', 'proximity_log', 'alarm_log'];
-foreach ($tables as $table) {
-    $query = "SELECT '$table' AS log_type, * FROM $table $where_sql";
-    $result = pg_query($db, $query);
-    while ($row = pg_fetch_assoc($result)) {
-        $logs[] = $row;
-    }
+if ($animal_id !== '') {
+    $where_clauses[] = 'animal_id = $' . (count($params) + 1);
+    $params[] = $animal_id;
+    $param_types .= 'i';
+    $param_values[] = $animal_id;
 }
 
-// Ordina per timestamp
-usort($logs, function($a, $b) {
-    return strtotime($b['timestamp']) < strtotime($a['timestamp']) ? 1 : -1;
-});
+// Data colonna
+$date_column = '';
+if ($table == 'dispenser_logs') $date_column = 'delivered_at';
+elseif ($table == 'alarm_log' || $table == 'proximity_log') $date_column = 'timestamp';
+
+// date_from filter
+if ($date_from !== '') {
+    $where_clauses[] = "$date_column >= $" . (count($params) + 1);
+    $params[] = $date_from;
+    $param_types .= 's';
+    $param_values[] = $date_from;
+}
+// date_to filter
+if ($date_to !== '') {
+    $where_clauses[] = "$date_column <= $" . (count($params) + 1);
+    $params[] = $date_to;
+    $param_types .= 's';
+    $param_values[] = $date_to;
+}
+
+$where_sql = '';
+if (count($where_clauses) > 0) {
+    $where_sql = 'WHERE ' . implode(' AND ', $where_clauses);
+}
+
+// Costruzione query
+$sql = "SELECT " . implode(',', $tables[$table]) . " FROM $table $where_sql ORDER BY $date_column DESC LIMIT 100";
+
+// Esecuzione query con pg_query_params
+$result = pg_query_params($db, $sql, $params);
+
+if (!$result) {
+    die("Errore nella query: " . pg_last_error($db));
+}
+
+$rows = pg_fetch_all($result);
+if (!$rows) {
+    $rows = [];  // Nessun risultato
+}
+
 ?>
-<link rel="stylesheet" href="storico.css">
 
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Storico Log</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="storico.css">
+
+    <title>Storico - Pet Feeder</title>
+    <style>
+        table {border-collapse: collapse; width: 80%; margin-top: 20px;}
+        th, td {border: 1px solid #ccc; padding: 8px;}
+        th {background: #eee;}
+    </style>
 </head>
 <body>
-<div class="page-wrapper">
-    <main class="content">
-        <h1>Storico Log</h1>
-    <form method="GET">
-        <label>Animale:
-            <select name="animal_id">
-                <option value="">Tutti</option>
-                <?php while ($a = pg_fetch_assoc($animal_query)): ?>
-                    <option value="<?= $a['id'] ?>" <?= $a['id'] == $animal_id ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($a['name']) ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </label>
+    <h1>Storico dati Pet Feeder</h1>
 
-        <label>Data:
-            <input type="date" name="date" value="<?= htmlspecialchars($date) ?>">
-        </label>
+    <form method="get" action="storico.php">
+        <label for="table">Seleziona tipo storico:</label>
+        <select name="table" id="table" onchange="this.form.submit()">
+            <?php foreach ($tables as $key => $cols): ?>
+                <option value="<?= htmlspecialchars($key) ?>" <?= ($key == $table) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($key) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <br><br>
+
+        <label for="animal_id">Animal ID:</label>
+        <input type="number" name="animal_id" id="animal_id" value="<?= htmlspecialchars($animal_id) ?>" />
+
+        <label for="date_from">Da (YYYY-MM-DD):</label>
+        <input type="date" name="date_from" id="date_from" value="<?= htmlspecialchars($date_from) ?>" />
+
+        <label for="date_to">A (YYYY-MM-DD):</label>
+        <input type="date" name="date_to" id="date_to" value="<?= htmlspecialchars($date_to) ?>" />
 
         <button type="submit">Filtra</button>
     </form>
 
-    <hr>
-
-    <?php if (count($logs) == 0): ?>
-        <p>Nessun log trovato.</p>
-    <?php else: ?>
-        <table border="1" cellpadding="6">
+    <table>
+        <thead>
             <tr>
-                <th>Tipo</th>
-                <th>ID Animale</th>
-                <th>Timestamp</th>
-                <th>Dettagli</th>
+                <?php foreach ($tables[$table] as $col): ?>
+                    <th><?= htmlspecialchars($col) ?></th>
+                <?php endforeach; ?>
             </tr>
-            <?php foreach ($logs as $log): ?>
-                <tr>
-                    <td><?= htmlspecialchars($log['log_type']) ?></td>
-                    <td><?= htmlspecialchars($log['animal_id']) ?></td>
-                    <td><?= htmlspecialchars($log['timestamp']) ?></td>
-                    <td>
-                        <?php
-                        if ($log['log_type'] === 'alarm_log') {
-                            echo "Allarme: " . htmlspecialchars($log['alarm_type']);
-                        } elseif ($log['log_type'] === 'dispenser_logs') {
-                            echo "Quantità: " . htmlspecialchars($log['quantity']) . "g";
-                        } elseif ($log['log_type'] === 'proximity_log') {
-                            echo "Presenza rilevata";
-                        }
-                        ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>  
- </main>
+        </thead>
+        <tbody>
+            <?php if (count($rows) === 0): ?>
+                <tr><td colspan="<?= count($tables[$table]) ?>">Nessun dato trovato</td></tr>
+            <?php else: ?>
+                <?php foreach ($rows as $row): ?>
+                    <tr>
+                        <?php foreach ($tables[$table] as $col): ?>
+                            <td><?= htmlspecialchars($row[$col]) ?></td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
     <?php include 'footer.php'; ?>
-</div>
 </body>
 </html>
