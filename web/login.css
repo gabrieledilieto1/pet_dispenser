@@ -89,3 +89,47 @@ form label > img{
         width: 15px;
     }
 }
+
+
+/* Migliora la responsività su tablet e mobile */
+@media (max-width: 900px) {
+    main > div {
+        width: 80%;
+    }
+    .submit_button, button {
+        width: 30vw;
+    }
+}
+
+@media (max-width: 600px) {
+    main {
+        width: 100%;
+        padding: 0 2vw;
+    }
+    main > div {
+        width: 98%;
+        margin: 0 auto;
+    }
+    div > form {
+        width: 100%;
+    }
+    .submit_button, button {
+        width: 90vw;
+        min-width: 120px;
+        font-size: 1em;
+        padding: 10px 0;
+    }
+    form input {
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 1em;
+    }
+    form label > img {
+        width: 18px;
+    }
+    video {
+        object-fit: cover;
+    }
+}

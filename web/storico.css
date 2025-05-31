@@ -10,6 +10,7 @@ h1 {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
+    padding-top: 15px ;
 }
 
 form {
@@ -48,22 +49,29 @@ button:hover {
 }
 
 table {
-    width: 100%;
+    width: 80%;
+    margin: 30px auto 0 auto; /* centra la tabella orizzontalmente */
     border-collapse: collapse;
-    margin-top: 20px;
     background-color: #fff;
-    font-size: 14px;
+    font-size: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(137,49,104,0.08);
 }
 
 th, td {
-    padding: 12px;
+    padding: 14px 10px;
     text-align: center;
     border-bottom: 1px solid #ccc;
 }
 
 th {
-    background-color: #f0f0f0;
+    background-color: #893168;
+    color: #fff;
     font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #bcb88a;
 }
 
 tr:nth-child(even) {
@@ -71,7 +79,11 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-    background-color: #efefef;
+    background-color: #f3e6ef;
+}
+
+tr:last-child td {
+    border-bottom: none;
 }
 
 html, body {
@@ -89,34 +101,64 @@ html, body {
 }
 
 /* Responsive layout */
-@media screen and (max-width: 768px) {
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
+@media screen and (max-width: 900px) {
+  table {
+    width: 98vw;
+    font-size: 0.97em;
+  }
+  th, td {
+    padding: 10px 6px;
+  }
+  .page-wrapper {
+    padding: 0 2vw;
+  }
+}
 
-    thead {
-        display: none;
-    }
-
-    tr {
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background-color: #fff;
-        padding: 10px;
-    }
-
-    td {
-        text-align: left;
-        padding: 8px;
-        position: relative;
-    }
-
-    td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 4px;
-        color: #333;
-    }
+@media screen and (max-width: 600px) {
+  body {
+    padding: 8px;
+  }
+  h1 {
+    font-size: 1.2em;
+    padding-top: 8px;
+  }
+  form {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 2vw;
+  }
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+  thead {
+    display: none;
+  }
+  tr {
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px 0;
+    box-shadow: 0 1px 6px rgba(137,49,104,0.07);
+  }
+  td {
+    text-align: left;
+    padding: 10px 8px;
+    position: relative;
+    border-bottom: none;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    color: #893168;
+  }
+  button {
+    width: 100%;
+    font-size: 1em;
+    padding: 12px 0;
+    margin-top: 8px;
+  }
 }

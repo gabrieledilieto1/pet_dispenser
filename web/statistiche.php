@@ -37,10 +37,12 @@ pg_close($db);
 <head>
     <link rel="stylesheet" href="statistiche.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistiche rilevamenti di prossimità</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <main>
 
 <h2>Statistiche Rilevamenti di Prossimità (ultimi 7 giorni)</h2>
 
@@ -76,6 +78,7 @@ const chart = new Chart(ctx, {
     }
 });
 </script>
+ </main>
         <?php include 'footer.php'; ?>
 </body>
 </html>

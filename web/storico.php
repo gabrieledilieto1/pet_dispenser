@@ -1,11 +1,4 @@
 <?php
-session_start();
-
-// Controllo accesso utente
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
 
 // Include connessione DB pg_connect
 require_once 'db.php';
@@ -90,15 +83,16 @@ if (!$rows) {
 <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="storico.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Storico - Pet Feeder</title>
     <style>
         table {border-collapse: collapse; width: 80%; margin-top: 20px;}
         th, td {border: 1px solid #ccc; padding: 8px;}
-        th {background: #eee;}
+       
     </style>
 </head>
 <body>
+   <main>
     <h1>Storico dati Pet Feeder</h1>
 
     <form method="get" action="storico.php">
@@ -147,6 +141,7 @@ if (!$rows) {
             <?php endif; ?>
         </tbody>
     </table>
+   </main>
     <?php include 'footer.php'; ?>
 </body>
 </html>

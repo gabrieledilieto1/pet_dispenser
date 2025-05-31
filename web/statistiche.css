@@ -70,12 +70,61 @@ button:hover, .btn:hover {
     background: #185fa4;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-    .container {
-        padding: 16px 6px;
-    }
-    table, th, td {
-        font-size: 0.95rem;
-    }
+/* Responsive layout */
+@media screen and (max-width: 900px) {
+  .container {
+    max-width: 98vw;
+    padding: 20px 10px;
+    margin: 20px auto;
+  }
+  table {
+    font-size: 0.97em;
+  }
+  th, td {
+    padding: 10px 6px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 10px 2vw;
+    margin: 10px auto;
+  }
+  h1, h2 {
+    font-size: 1.2em;
+  }
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+  thead {
+    display: none;
+  }
+  tr {
+    margin-bottom: 14px;
+    border: 1px solid #e3eaf5;
+    border-radius: 6px;
+    background: #fafbfc;
+    padding: 8px 0;
+    box-shadow: 0 1px 6px rgba(137,49,104,0.07);
+  }
+  td {
+    text-align: left;
+    padding: 10px 8px;
+    position: relative;
+    border-bottom: none;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    color: #893168;
+  }
+  button, .btn {
+    width: 100%;
+    font-size: 1em;
+    padding: 12px 0;
+    margin-top: 10px;
+  }
 }

@@ -26,11 +26,12 @@ $schedules = pg_fetch_all($res);
 <html lang="it">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impostazioni Dispenser</title>
   <link rel="stylesheet" href="dispenser_settings.css">
 </head>
 <body>
-
+ 
 <?php include 'header.php'; ?>
 
 <main class="dispenser-settings-container">

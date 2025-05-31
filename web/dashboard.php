@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require './db.php';
 
 $showUpdateMessage = isset($_GET['updated']) && $_GET['updated'] == 1;
@@ -28,6 +30,7 @@ if ($result && pg_num_rows($result) > 0) {
 <html>
   <head>
     <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">  

@@ -46,12 +46,14 @@ pg_close($db);
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="statistiche.css">
     <title>Consigli sull'uso del dispenser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       .suggestion { margin-top: 20px; padding: 15px; background:rgb(203, 208, 222); border-left: 6px solid #893168; font-size: 1.1em; }
       .metrics { margin-top: 15px; font-size: 0.9em; color: #555; }
     </style>
 </head>
 <body>
+  <main>
 
 <div class="container">
   <h1>Consigli per migliorare l'erogazione del cibo</h1>
@@ -68,6 +70,7 @@ pg_close($db);
     </ul>
   </div>
 </div>
+</main>
     <?php include 'footer.php'; ?>
 </body>
 </html>

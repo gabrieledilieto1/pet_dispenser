@@ -150,3 +150,100 @@
     background-color: #a8a36e;
   }
   
+/* ...existing code... */
+
+/* Responsive layout */
+@media screen and (max-width: 900px) {
+  .dashboard-container {
+    padding: 20px 2vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .animal-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .user-header {
+    flex-direction: column;
+    gap: 18px;
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  html, body {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+  .dashboard-container {
+    padding: 8px 0;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .animal-list {
+    gap: 10px;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding: 0 2vw;
+  }
+  .animal-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 4vw;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
+  }
+  .animal-photo {
+    width: 44px;
+    height: 44px;
+    font-size: 0.95em;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .user-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .add-animal-button,
+  .manual-dispense {
+    width: 100%;
+    justify-content: center;
+    font-size: 1em;
+    padding: 10px 0;
+    box-sizing: border-box;
+  }
+  .dispenser-settings {
+    padding: 8px 6px;
+    font-size: 0.95em;
+    word-break: break-word;
+  }
+  .edit-button,
+  .delete-button {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1em;
+    box-sizing: border-box;
+  }
+  .animal-details {
+    word-break: break-word;
+    min-width: 0;
+  }
+}
+
+/* Evita overflow orizzontale globale */
+body, html {
+  max-width: 100vw;
+  overflow-x: hidden;
+}

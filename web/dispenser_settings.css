@@ -115,3 +115,78 @@
     background-color: #3b3a3c;
   }
   
+
+/* Responsive layout */
+@media screen and (max-width: 800px) {
+  .dispenser-settings-container {
+    padding: 20px 5vw;
+    margin: 30px auto;
+  }
+  .add-schedule-form,
+  .existing-schedules {
+    margin-bottom: 24px;
+  }
+  .add-schedule-form form,
+  .existing-schedules table {
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .dispenser-settings-container {
+    padding: 10px 2vw;
+    margin: 15px auto;
+  }
+  .add-schedule-form input,
+  .existing-schedules input,
+  .add-schedule-form button,
+  .existing-schedules button {
+    width: 100%;
+    margin: 6px 0;
+    box-sizing: border-box;
+  }
+  .add-schedule-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .existing-schedules table,
+  .existing-schedules thead,
+  .existing-schedules tbody,
+  .existing-schedules th,
+  .existing-schedules td,
+  .existing-schedules tr {
+    display: block;
+    width: 100%;
+  }
+  .existing-schedules thead {
+    display: none;
+  }
+  .existing-schedules tr {
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 1px 6px rgba(137,49,104,0.07);
+  }
+  .existing-schedules td {
+    text-align: left;
+    padding: 10px 8px;
+    position: relative;
+    border-bottom: none;
+  }
+  .existing-schedules td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    color: #893168;
+  }
+  .cta-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 1em;
+  }
+}

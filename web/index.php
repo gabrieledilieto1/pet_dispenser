@@ -1,11 +1,10 @@
-<?php
-session_start();
-?>
+
 
 
 <html>
     <head>
         <title>Smart Pet Feeder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link rel="icon" type="image/x-icon" href="favicon.ico">  
         <link rel="stylesheet" href="index.css">      
@@ -61,25 +60,29 @@ session_start();
             </a>
             <?php endif; ?>
           </div>
-          <!-- NUOVA CARD STATISTICHE -->
+          <!-- CARD STATISTICHE -->
           <div class="feature-card">
             <i class="fas fa-chart-pie"></i>
             <h3>Statistiche</h3>
             <p>Visualizza grafici e dati sull’alimentazione del tuo animale.</p>
+              <?php if (isset($_SESSION['username'])): ?>
             <a href="statistiche.php" class="cta-button" style="margin-top: 10px; display: inline-block;">
               Vai alle Statistiche <i class="fas fa-chart-bar"></i>
             </a>
+            <?php endif; ?>
           </div>
-          <!-- MODIFICA CARD NOTIFICHE INTELLIGENTI -->
-          <a href="suggerimenti.php" class="feature-card" style="text-decoration: none; color: inherit;">
+          <!-- CARD NOTIFICHE INTELLIGENTI -->
+          <div class="feature-card">
             <i class="fas fa-bell"></i>
             <h3>Notifiche Intelligenti</h3>
             <p>Ricevi avvisi quando il cibo sta per terminare o per anomalie nel funzionamento.<br>
             Invia suggerimenti.</p>
-            <span class="cta-button" style="margin-top: 10px; display: inline-block;">
-              Vai ai Suggerimenti <i class="fas fa-lightbulb"></i>
-            </span>
-          </a>
+            <?php if (isset($_SESSION['username'])): ?>
+            <a href="suggerimenti.php" class="cta-button" style="margin-top: 10px; display: inline-block;">
+              Suggerimenti <i class="fas fa-lightbulb"></i>
+            </a>
+            <?php endif; ?>
+          </div>
           <div class="feature-card">
             <i class="fas fa-mobile-alt"></i>
             <h3>App Mobile</h3>
