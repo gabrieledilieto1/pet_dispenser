@@ -42,8 +42,7 @@ $schedules = pg_fetch_all($res);
     <form action="save_schedule.php" method="POST">
       <input type="hidden" name="animal_id" value="<?php echo $animal_id; ?>">
       <label>Orario: <input type="time" name="schedule_time" required></label>
-      <label>Porzione (gr): <input type="number" name="portion_grams" min="10" required></label>
-      <label>
+      <label>Porzione (gr): <input type="number" name="portion_grams" value="100" readonly style="background:#eee;cursor:not-allowed;"></label>      <label>
         <input type="hidden" name="proximity_enabled" value="false">
         <input type="checkbox" name="proximity_enabled" value="true" checked> Prossimità
       </label>
@@ -81,7 +80,7 @@ $schedules = pg_fetch_all($res);
               <form action="update_schedule.php" method="POST">
                 <input type="hidden" name="schedule_id" value="<?php echo $s['id']; ?>">
                 <td><input type="time" name="schedule_time" value="<?php echo $s['schedule_time']; ?>" required></td>
-                <td><input type="number" name="portion_grams" value="<?php echo $s['portion_grams']; ?>" required></td>
+                <td><input type="number" name="portion_grams" value="100" readonly style="background:#eee;cursor:not-allowed;"></td>              
                 <td>
                   <input type="hidden" name="proximity_enabled" value="false">
                   <input type="checkbox" name="proximity_enabled" value="true" <?php echo ($s['proximity_enabled'] === 't' || $s['proximity_enabled'] === '1') ? 'checked' : ''; ?>>
