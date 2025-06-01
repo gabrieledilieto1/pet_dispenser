@@ -92,7 +92,7 @@ if (!$rows) {
     </style>
 </head>
 <body>
-   <main>
+<main> 
     <h1>Storico dati Pet Feeder</h1>
 
     <form method="get" action="storico.php">
@@ -141,7 +141,7 @@ if (!$rows) {
             <?php endif; ?>
         </tbody>
     </table>
-   </main>
+</main>
     <?php include 'footer.php'; ?>
 </body>
 </html>
