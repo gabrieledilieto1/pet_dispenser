@@ -8,7 +8,7 @@
 pet_dispeenser/
 ├── web/               # Frontend del sito per il controllo del dispenser
 ├── node-red/          # Flow Node-RED per automazione e logica di controllo
-├── mqtt/              # Script di comunicazione tramite protocollo MQTT
+├── mqtt/              # Script di comunicazione tramite protocollo MQTT - HiveMQ
 ├── micropython/       # Codice per microcontrollori (es. ESP32)
 ├── db/                # Tabelle DataBase pet_feeder
 └── README.md          # Documentazione del progetto
