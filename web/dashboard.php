@@ -92,9 +92,12 @@ if ($result && pg_num_rows($result) > 0) {
                 <p>Età: <?php echo (int)$animal['age']; ?> anni — Peso: <?php echo (float)$animal['weight']; ?> kg</p>
                 <p>Razza: <?php echo htmlspecialchars($animal['breed']); ?></p>
               </div>
-              <div class="dispenser-settings">
-                <p><a href="dispenser_settings.php?animal_id=<?php echo $animal['id']; ?>">Impostazioni dispenser</a></p>
-              </div>
+              <div class="animal-actions">
+              
+              <a class="dispenser-settings" href="dispenser_settings.php?animal_id=<?php echo $animal['id']; ?>">
+                    Impostazioni dispenser
+              </a>
+
               <form action="edit_animal.php" method="GET">
                 <input type="hidden" name="animal_id" value="<?php echo $animal['id']; ?>">
                 <button type="submit" class="edit-button">Edit</button>
@@ -103,11 +106,11 @@ if ($result && pg_num_rows($result) > 0) {
                <input type="hidden" name="animal_id" value="<?php echo $animal['id']; ?>">
                <button type="submit" class="delete-button">Elimina</button>
               </form>
+              </div>
             </div>
           <?php endforeach; ?>
         <?php endif; ?>
       </section>
-      <button onclick="inviaComando()">Eroga manualmente</button>
 
 
     </main>
