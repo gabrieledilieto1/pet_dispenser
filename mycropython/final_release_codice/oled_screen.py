@@ -36,18 +36,11 @@ wifi_logo = bytearray([
 
 # --- Funzioni per mostrare immagini e testo ---
 def draw_main_screen():
-    global battery_voltage
     display.fill(0)
     fb_logo = framebuf.FrameBuffer(pet_feeder_logo, 128, 64, framebuf.MONO_HLSB)
     display.blit(fb_logo, 0, 0)
     fb_wifi = framebuf.FrameBuffer(wifi_logo, 16, 16, framebuf.MONO_HLSB)
     display.blit(fb_wifi, WIDTH - 16, 0)
-    # Controllo tipo
-    try:
-        batt_str = "Batt: {:.2f}V".format(float(battery_voltage))
-    except (ValueError, TypeError):
-        batt_str = "Batt: --.-V"
-    display.text(batt_str, WIDTH - 58, HEIGHT - 10)
     display.show()
     
 def show_dispense_message():

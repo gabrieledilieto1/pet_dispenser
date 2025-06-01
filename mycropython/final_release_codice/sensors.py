@@ -8,7 +8,7 @@ class IRSensor:
         self.sensor = Pin(pin_num, Pin.IN)
         
     def is_obstructed(self):
-        return self.sensor.value() == 1
+        return self.sensor.value() == 0
 
 class UltrasonicSensor:
     def __init__(self, trig_pin, echo_pin):

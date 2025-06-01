@@ -23,3 +23,4 @@ class MQTTManager:
         
     def publish_alert(self, msg):
         self.client.publish(self.topic_alert, msg)
+
