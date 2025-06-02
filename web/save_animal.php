@@ -30,15 +30,23 @@ if (!move_uploaded_file($_FILES["animal_photo"]["tmp_name"], $target_file)) {
   die("Errore nel caricamento dell'immagine.");
 }
 
-$sql = "INSERT INTO animals (user_id, name, age, weight, breed, photo_path)
-        VALUES ($1, $2, $3, $4, $5, $6)";
+pg_query_params($db, "DELETE FROM animals WHERE user_id = $1", [$user_id]);
+
+$sql = "INSERT INTO animals (id, user_id, name, age, weight, breed, photo_path, created_at)
+        VALUES (1, $1, $2, $3, $4, $5, $6, NOW())";
+
 
 $res = pg_query_params($db, $sql, [$user_id, $name, $age, $weight, $breed, $target_file]);
 
 if ($res) {
-  header("Location: dashboard.php?success=1");
+  header("Location: dashboard.php");
   exit();
 } else {
-  echo "Errore: " . pg_last_error($db);
+  $error = pg_last_error($db);
+  if (strpos($error, 'unique_user_per_animal') !== false) {
+    echo "❌ Errore: hai già registrato un animale.";
+  } else {
+    echo "❌ Errore durante il salvataggio: " . htmlspecialchars($error);
+  }
 }
 ?>

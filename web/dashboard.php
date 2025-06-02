@@ -73,9 +73,16 @@ if ($result && pg_num_rows($result) > 0) {
           </div>
           <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
         </div>
-        <a href="add_animal.php" class="add-animal-button">
+       <?php if (count($animals) === 0): ?>
+       <a href="add_animal.php" class="add-animal-button">
+         <i class="fas fa-plus"></i> Aggiungi animale
+       </a>
+    <?php else: ?>
+        <button class="add-animal-button" style="background-color: grey; cursor: not-allowed;" disabled>
           <i class="fas fa-plus"></i> Aggiungi animale
-        </a>
+        </button>
+    <?php endif; ?>
+
       </section>
 
       <section class="animal-list">
