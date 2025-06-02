@@ -1,7 +1,7 @@
 import time 
 from sensors import *
 from mqtt_manager import MQTTManager
-from oled_screen import draw_main_screen, show_dispense_message
+from oled_screen import *
 import ujson
 
 scheduled_time = []
@@ -14,7 +14,6 @@ class SmartPetFeeder:
         self.servo = ServoDispenser(18)
         self.buzzer = BuzzerManager(21, 22)
         self.wifi = WiFiManager('NETGEAR36', 'windypotato931')
-        self.batt_monitor = BatteryMonitor(adc_pin=34, r1=100000, r2=100000)
         self.mqtt = MQTTManager(
             client_id='petfeeder',
             broker_ip='broker.hivemq.com',
@@ -26,11 +25,15 @@ class SmartPetFeeder:
         )
         self.button = Pin(14, Pin.IN, Pin.PULL_UP)
         self.last_button_state = self.button.value()
+        self.erogazioni_anticipate = set()  # orari erogati anticipatamente (in formato "HH:MM")
         
     def setup(self):
+        show_wifi_status(connecting=True) 
         self.wifi.connect()
-        self.mqtt.connect()
+        show_wifi_status(connecting=False)  
+        time.sleep(2)
         draw_main_screen()
+        self.mqtt.connect()
         
     def execute_dispense(self):
         self.buzzer.start_sound()
@@ -38,23 +41,52 @@ class SmartPetFeeder:
         if self.ir.is_obstructed():
             self.buzzer.start_sound()
             print("Limite croccantini raggiunto!")
+            show_ir_alert()
             self.mqtt.publish_alert(b'Accumulo rilevato!')
         self.mqtt.publish_status(b'Erogazione completata.')
         print("Erogazione completata.")
         show_dispense_message()
-        
+    
+
     def check_proximity(self):
+        global scheduled_time
+
         try:
             dist = self.ultra_animal.read_distance()
             print("Distanza animale:", dist)
-            if dist < 5:
-                print("Animale rilevato, erogazione")
-                self.mqtt.publish_status(b'Animale rilevato, erogazione')
-                self.execute_dispense()
-                time.sleep(10)
-        except:
-            pass
-        
+            if dist < 10:
+                print("Animale rilevato")
+
+                now = time.localtime(time.time() + 3600 * 2)
+                hour, minute, second = now[3], now[4], now[5]
+                now_secs = hour * 3600 + minute * 60 + second
+                now_str = f"{hour:02d}:{minute:02d}"
+
+                for sched in scheduled_time:
+                    try:
+                        sched_time = sched['time'][:5]
+                        if sched_time in self.erogazioni_anticipate:
+                            continue  
+
+                        h, m = map(int, sched_time.split(":"))
+                        sched_secs = h * 3600 + m * 60
+                        diff = sched_secs - now_secs
+
+                        if 0 < diff <= 600:
+                            print(f"Animale rilevato entro 10 minuti da erogazione programmata ({sched_time}), erogo ora")
+                            self.mqtt.publish_status(f"Erogazione anticipata per rilevamento animale ({sched_time})".encode())
+                            show_early_dispense()
+                            self.execute_dispense()
+
+                            self.erogazioni_anticipate.add(sched_time)
+                            time.sleep(10)
+                            break  # evita doppia erogazione nel singolo ciclo
+                    except Exception as e:
+                        print("Errore parsing orario programmato:", e)
+        except Exception as e:
+            print("Errore rilevamento prossimità:", e)
+
+
     def check_food_level(self):
         try:
             dist = self.ultra_food.read_distance()
@@ -71,20 +103,6 @@ class SmartPetFeeder:
             print("Pulsante premuto, erogazione manuale")
             self.execute_dispense()
         self.last_button_state = current_state
-
-    def check_schedule(self):
-        global scheduled_time
-        if scheduled_time:
-            formatted_times = [s['time'][:5] for s in scheduled_time]
-        else:
-            print("Nessun orario programmato")
-        if scheduled_time:
-            now = time.localtime(time.mktime(time.localtime()) + 3600*2)  # aggiunge 2 ore all’ora UTC
-            current_time = "{:02d}:{:02d}:{:02d}".format(now[3], now[4], now[5])  # ora con secondi, es. "10:30:45"
-            for schedule in scheduled_time:
-                if schedule['time'][:8] == current_time:
-                    print("Orario programmato raggiunto:", current_time)
-                    self.execute_dispense()
         
     def loop(self):
      while True:
@@ -92,7 +110,6 @@ class SmartPetFeeder:
         self.check_proximity()
         self.check_food_level()
         self.check_button()
-        self.check_schedule()
         
         # Stampa l’orario programmato attuale (se esiste)
         if scheduled_time:

@@ -33,12 +33,12 @@ class ServoDispenser:
         self.servo = PWM(Pin(pin_num), freq=50)
         
     def dispense(self):
-        for duty in range(40, 116, 5):  # da 40 a 115 con step 5
+        for duty in range(40, 89, 5):  
             self.servo.duty(duty)
             time.sleep(0.05)  
-        time.sleep(2) 
+        time.sleep(5) 
 
-        for duty in range(115, 39, -5):  # da 115 a 40 con step -5
+        for duty in range(90, 39, -5):  
             self.servo.duty(duty)
             time.sleep(0.05)
 
@@ -77,16 +77,3 @@ class WiFiManager:
             time.sleep(1)
         print('Connesso a Wi-Fi:', wlan.ifconfig())
         sync_time()
-
-class BatteryMonitor:
-    def __init__(self, adc_pin, r1, r2):
-        self.adc = ADC(Pin(adc_pin))
-        self.adc.atten(ADC.ATTN_11DB)
-        self.adc.width(ADC.WIDTH_12BIT)
-        self.R1 = r1
-        self.R2 = r2
-        
-    def read_voltage(self):
-        raw = self.adc.read()
-        voltage = (raw / 4095) * 3.6 * (self.R1 + self.R2) / self.R2
-        return voltage
