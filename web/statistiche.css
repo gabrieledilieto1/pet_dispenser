@@ -23,6 +23,11 @@ h1, h2 {
     margin-bottom: 18px;
 }
 
+h2 {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+    
 /* Tabelle statistiche */
 table {
     width: 100%;

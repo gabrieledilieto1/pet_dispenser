@@ -46,7 +46,7 @@ pg_close($db);
 
 <h2>Statistiche Rilevamenti di Prossimità (ultimi 7 giorni)</h2>
 
-<canvas id="proximityChart" width="600" height="400"></canvas>
+<canvas id="proximityChart" width="500" height="400"></canvas>
 
 <script>
 const proximityData = <?php echo json_encode($data); ?>;

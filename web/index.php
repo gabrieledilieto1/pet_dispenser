@@ -83,11 +83,7 @@
             </a>
             <?php endif; ?>
           </div>
-          <div class="feature-card">
-            <i class="fas fa-mobile-alt"></i>
-            <h3>App Mobile</h3>
-            <p>Controlla e monitora il dispenser direttamente dal tuo smartphone.</p>
-          </div>
+          
           <div class="feature-card">
             <i class="fas fa-shield-alt"></i>
             <h3>Sicurezza Alimentare</h3>
