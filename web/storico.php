@@ -14,9 +14,7 @@ $tables = [
 
 // Tabella scelta dall’utente
 $table = $_GET['table'] ?? 'dispenser_logs';
-if (!array_key_exists($table, $tables)) {
-    $table = 'dispenser_logs';
-}
+if (!array_key_exists($table, $tables)) $table = 'dispenser_logs';
 
 // Filtri
 $animal_id = $_GET['animal_id'] ?? '';
@@ -26,58 +24,30 @@ $date_to = $_GET['date_to'] ?? '';
 // Preparazione query dinamica con parametri
 $where_clauses = [];
 $params = [];
-$param_types = '';
-$param_values = [];
 
 if ($animal_id !== '') {
     $where_clauses[] = 'animal_id = $' . (count($params) + 1);
     $params[] = $animal_id;
-    $param_types .= 'i';
-    $param_values[] = $animal_id;
 }
 
-// Data colonna
-$date_column = '';
-if ($table == 'dispenser_logs') $date_column = 'delivered_at';
-elseif ($table == 'alarm_log' || $table == 'proximity_log') $date_column = 'timestamp';
+$date_column = $table == 'dispenser_logs' ? 'delivered_at' : 'timestamp';
 
-// date_from filter
 if ($date_from !== '') {
     $where_clauses[] = "$date_column >= $" . (count($params) + 1);
     $params[] = $date_from;
-    $param_types .= 's';
-    $param_values[] = $date_from;
 }
-// date_to filter
 if ($date_to !== '') {
     $where_clauses[] = "$date_column <= $" . (count($params) + 1);
     $params[] = $date_to;
-    $param_types .= 's';
-    $param_values[] = $date_to;
 }
 
-$where_sql = '';
-if (count($where_clauses) > 0) {
-    $where_sql = 'WHERE ' . implode(' AND ', $where_clauses);
-}
-
-// Costruzione query
+$where_sql = count($where_clauses) > 0 ? 'WHERE ' . implode(' AND ', $where_clauses) : '';
 $sql = "SELECT " . implode(',', $tables[$table]) . " FROM $table $where_sql ORDER BY $date_column DESC LIMIT 100";
-
-// Esecuzione query con pg_query_params
 $result = pg_query_params($db, $sql, $params);
 
-if (!$result) {
-    die("Errore nella query: " . pg_last_error($db));
-}
-
-$rows = pg_fetch_all($result);
-if (!$rows) {
-    $rows = [];  // Nessun risultato
-}
-
+if (!$result) die("Errore nella query: " . pg_last_error($db));
+$rows = pg_fetch_all($result) ?: [];
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -85,18 +55,12 @@ if (!$rows) {
     <link rel="stylesheet" href="storico.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Storico - Pet Feeder</title>
-    <style>
-        table {border-collapse: collapse; width: 80%; margin-top: 20px;}
-        th, td {border: 1px solid #ccc; padding: 8px;}
-       
-    </style>
 </head>
 <body>
-<main> 
+ <main>
     <h1>Storico dati Pet Feeder</h1>
-
-    <form method="get" action="storico.php">
-        <label for="table">Seleziona tipo storico:</label>
+    <form method="get" action="storico.php" class="storico-form">
+        <label for="table">Tipo storico:</label>
         <select name="table" id="table" onchange="this.form.submit()">
             <?php foreach ($tables as $key => $cols): ?>
                 <option value="<?= htmlspecialchars($key) ?>" <?= ($key == $table) ? 'selected' : '' ?>>
@@ -104,21 +68,16 @@ if (!$rows) {
                 </option>
             <?php endforeach; ?>
         </select>
-
-        <br><br>
-
-        <label for="animal_id">Animal ID:</label>
-        <input type="number" name="animal_id" id="animal_id" value="<?= htmlspecialchars($animal_id) ?>" />
-
-        <label for="date_from">Da (YYYY-MM-DD):</label>
+        <label for="date_from">Da:</label>
         <input type="date" name="date_from" id="date_from" value="<?= htmlspecialchars($date_from) ?>" />
 
-        <label for="date_to">A (YYYY-MM-DD):</label>
+        <label for="date_to">A:</label>
         <input type="date" name="date_to" id="date_to" value="<?= htmlspecialchars($date_to) ?>" />
 
         <button type="submit">Filtra</button>
     </form>
 
+    <div class="table-responsive">
     <table>
         <thead>
             <tr>
@@ -134,14 +93,15 @@ if (!$rows) {
                 <?php foreach ($rows as $row): ?>
                     <tr>
                         <?php foreach ($tables[$table] as $col): ?>
-                            <td><?= htmlspecialchars($row[$col]) ?></td>
+                            <td data-label="<?= htmlspecialchars($col) ?>"><?= htmlspecialchars($row[$col]) ?></td>
                         <?php endforeach; ?>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
     </table>
-</main>
-    <?php include 'footer.php'; ?>
+    </div>
+ </main>
+ <?php include 'footer.php'; ?>
 </body>
 </html>

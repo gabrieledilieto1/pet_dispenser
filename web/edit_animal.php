@@ -87,8 +87,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="animal-weight">Peso (kg):</label>
         <input type="number" step="0.01" id="animal-weight" name="animal_weight" value="<?php echo (float)$animal['weight']; ?>" required>
 
+        <label for="animal-type">Tipo animale:</label>
+        <select id="animal-type" required onchange="updateBreedOptions()">
+          <option value="">Seleziona tipo</option>
+          <option value="cane" <?php if (in_array($animal['breed'], [
+            "Labrador Retriever","Golden Retriever","Bulldog","Barboncino","Pastore Tedesco","Beagle","Chihuahua","Carlino","Rottweiler","Bassotto"
+          ])) echo 'selected'; ?>>Cane</option>
+          <option value="gatto" <?php if (in_array($animal['breed'], [
+            "Europeo","Siamese","Persiano","Maine Coon","Bengala","Ragdoll","British Shorthair","Siberiano","Certosino","Sphynx"
+          ])) echo 'selected'; ?>>Gatto</option>
+        </select>
+
         <label for="animal-breed">Razza:</label>
-        <input type="text" id="animal-breed" name="animal_breed" value="<?php echo htmlspecialchars($animal['breed']); ?>" required>
+        <select id="animal-breed" name="animal_breed" required>
+          <option value="">Seleziona razza</option>
+        </select>
+
+        <script>
+        const breeds = {
+          cane: [
+            "Labrador Retriever",
+            "Golden Retriever",
+            "Bulldog",
+            "Barboncino",
+            "Pastore Tedesco",
+            "Beagle",
+            "Chihuahua",
+            "Carlino",
+            "Rottweiler",
+            "Bassotto"
+          ],
+          gatto: [
+            "Europeo",
+            "Siamese",
+            "Persiano",
+            "Maine Coon",
+            "Bengala",
+            "Ragdoll",
+            "British Shorthair",
+            "Siberiano",
+            "Certosino",
+            "Sphynx"
+          ]
+        };
+
+        function updateBreedOptions(selectedBreed = null) {
+          const type = document.getElementById('animal-type').value;
+          const breedSelect = document.getElementById('animal-breed');
+          breedSelect.innerHTML = '<option value="">Seleziona razza</option>';
+          if (breeds[type]) {
+            breeds[type].forEach(function(breed) {
+              const option = document.createElement('option');
+              option.value = breed;
+              option.textContent = breed;
+              if (selectedBreed && selectedBreed === breed) {
+                option.selected = true;
+              }
+              breedSelect.appendChild(option);
+            });
+          }
+        }
+
+        // Preseleziona tipo e razza all'apertura della pagina
+        window.addEventListener('DOMContentLoaded', function() {
+          var currentBreed = <?php echo json_encode($animal['breed']); ?>;
+          var type = '';
+          if (breeds.cane.includes(currentBreed)) type = 'cane';
+          else if (breeds.gatto.includes(currentBreed)) type = 'gatto';
+          document.getElementById('animal-type').value = type;
+          updateBreedOptions(currentBreed);
+        });
+        </script>
 
         <label for="animal-photo">Cambia immagine (opzionale):</label>
         <input type="file" id="animal-photo" name="animal_photo" accept="image/*">

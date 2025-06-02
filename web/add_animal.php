@@ -26,9 +26,61 @@
 
       <label for="animal-weight">Peso (kg):</label>
       <input type="number" step="0.01" id="animal-weight" name="animal_weight" min="0" required>
+      
+      <label for="animal-type">Tipo animale:</label>
+      <select id="animal-type" required onchange="updateBreedOptions()">
+        <option value="">Seleziona tipo</option>
+        <option value="cane">Cane</option>
+        <option value="gatto">Gatto</option>
+      </select>
 
       <label for="animal-breed">Razza:</label>
-      <input type="text" id="animal-breed" name="animal_breed" required>
+      <select id="animal-breed" name="animal_breed" required>
+        <option value="">Seleziona razza</option>
+      </select>
+
+      <script>
+        const breeds = {
+          cane: [
+        "Labrador Retriever",
+        "Golden Retriever",
+        "Bulldog",
+        "Barboncino",
+        "Pastore Tedesco",
+        "Beagle",
+        "Chihuahua",
+        "Carlino",
+        "Rottweiler",
+        "Bassotto"
+          ],
+          gatto: [
+        "Europeo",
+        "Siamese",
+        "Persiano",
+        "Maine Coon",
+        "Bengala",
+        "Ragdoll",
+        "British Shorthair",
+        "Siberiano",
+        "Certosino",
+        "Sphynx"
+          ]
+        };
+
+        function updateBreedOptions() {
+          const type = document.getElementById('animal-type').value;
+          const breedSelect = document.getElementById('animal-breed');
+          breedSelect.innerHTML = '<option value="">Seleziona razza</option>';
+          if (breeds[type]) {
+        breeds[type].forEach(function(breed) {
+          const option = document.createElement('option');
+          option.value = breed;
+          option.textContent = breed;
+          breedSelect.appendChild(option);
+        });
+          }
+        }
+      </script>
 
       <label for="animal-photo">Aggiungi allegato:</label>
       <div class="file-upload-wrapper">

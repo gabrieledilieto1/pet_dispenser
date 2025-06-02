@@ -100,6 +100,18 @@ html, body {
     flex: 1;
 }
 
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 24px;
+}
+
+.table-responsive table {
+    min-width: 600px;
+    /* oppure imposta una min-width adatta alle tue colonne */
+}
+
 /* Responsive layout */
 @media screen and (max-width: 900px) {
   table {

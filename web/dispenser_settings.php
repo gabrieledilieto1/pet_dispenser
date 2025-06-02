@@ -47,10 +47,7 @@ $schedules = pg_fetch_all($res);
         <input type="hidden" name="proximity_enabled" value="false">
         <input type="checkbox" name="proximity_enabled" value="true" checked> Prossimità
       </label>
-      <label>
-        <input type="hidden" name="manual_mode" value="false">
-        <input type="checkbox" name="manual_mode" value="true"> Manuale
-      </label>
+     
       <label>
         <input type="hidden" name="active" value="false">
         <input type="checkbox" name="active" value="true" checked> Attivo
@@ -64,13 +61,13 @@ $schedules = pg_fetch_all($res);
     <?php if (!$schedules): ?>
       <p>Nessun orario impostato.</p>
     <?php else: ?>
+
       <table>
         <thead>
           <tr>
             <th>Orario</th>
             <th>Porzione (gr)</th>
             <th>Prossimità</th>
-            <th>Manuale</th>
             <th>Attivo</th>
             <th>Azioni</th>
           </tr>
@@ -85,10 +82,6 @@ $schedules = pg_fetch_all($res);
                 <td>
                   <input type="hidden" name="proximity_enabled" value="false">
                   <input type="checkbox" name="proximity_enabled" value="true" <?php echo ($s['proximity_enabled'] === 't' || $s['proximity_enabled'] === '1') ? 'checked' : ''; ?>>
-                </td>
-                <td>
-                  <input type="hidden" name="manual_mode" value="false">
-                  <input type="checkbox" name="manual_mode" value="true" <?php echo ($s['manual_mode'] === 't' || $s['manual_mode'] === '1') ? 'checked' : ''; ?>>
                 </td>
                 <td>
                   <input type="hidden" name="active" value="false">
@@ -107,6 +100,7 @@ $schedules = pg_fetch_all($res);
         </tbody>
       </table>
     <?php endif; ?>
+
   </section>
 
   <div style="text-align:center; margin-top:20px;">
