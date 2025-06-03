@@ -137,9 +137,9 @@
       </div>
     </section>
     <section class="image-gallery">
-    <img src="img/prodotto-frontale.jpg" alt="Erogatore - Vista Frontale">
-    <img src="img/prodotto-laterale.jpg" alt="Erogatore - Vista Laterale">
-    <img src="img/prodotto-con-animale.jpg" alt="Erogatore in uso con animale">
+    <img src="photo/photo_index/photo1.JPG" alt="Erogatore ">
+    <img src="photo/photo_index/photo2.JPG" alt="Erogatore">
+    <img src="photo/photo_index/photo3.JPG" alt="Erogatore">
     </section>
 
   </main>
