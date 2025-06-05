@@ -1,0 +1,651 @@
+[
+    {
+        "id": "ccb948fc121152fe",
+        "type": "tab",
+        "label": "Smart Pet Feeder Flow",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "bf72596bd19b7bc0",
+        "type": "group",
+        "z": "ccb948fc121152fe",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "1ffa2dda8bd4819d"
+        ],
+        "x": 794,
+        "y": 119,
+        "w": 232,
+        "h": 82
+    },
+    {
+        "id": "2cb98355e5a921b9",
+        "type": "inject",
+        "z": "ccb948fc121152fe",
+        "name": "Leggi orari",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "123",
+        "payloadType": "str",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "3fe5967571ab6280"
+            ]
+        ]
+    },
+    {
+        "id": "3fe5967571ab6280",
+        "type": "change",
+        "z": "ccb948fc121152fe",
+        "name": "Set animal_id",
+        "rules": [
+            {
+                "t": "set",
+                "p": "animal_id",
+                "pt": "flow",
+                "to": "1",
+                "tot": "str"
+            }
+        ],
+        "x": 280,
+        "y": 60,
+        "wires": [
+            [
+                "150d2e66c0c71609"
+            ]
+        ]
+    },
+    {
+        "id": "150d2e66c0c71609",
+        "type": "postgresql",
+        "z": "ccb948fc121152fe",
+        "name": "Leggi orari dal DB",
+        "query": "SELECT schedule_time, portion_grams, proximity_enabled, a.name FROM dispenser_schedules\nJOIN animals a ON a.id = dispenser_schedules.animal_id\n WHERE animal_id = 1 AND active = true ORDER BY schedule_time",
+        "postgreSQLConfig": "7ed30b6f68fe75b1",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 500,
+        "y": 60,
+        "wires": [
+            [
+                "b8c06829071f1be1"
+            ]
+        ]
+    },
+    {
+        "id": "b8c06829071f1be1",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Formatta JSON MQTT",
+        "func": "// msg.payload contiene un array di righe dal DB\n// Lo trasformiamo in JSON che l'ESP32 può interpretare\n\nlet schedules = msg.payload.map(item => ({\n    time: item.schedule_time,\n    grams: item.portion_grams,\n    proximityEnabled: item.proximity_enabled\n}));\n\nmsg.payload = JSON.stringify(schedules);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 60,
+        "wires": [
+            [
+                "abb8cacf76756932",
+                "8f079b0d2649c521"
+            ]
+        ]
+    },
+    {
+        "id": "abb8cacf76756932",
+        "type": "mqtt out",
+        "z": "ccb948fc121152fe",
+        "name": "Invia settings",
+        "topic": "/petfeeder/schedule",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4ea2a974a3257acf",
+        "x": 940,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "13717055c943f233",
+        "type": "mqtt in",
+        "z": "ccb948fc121152fe",
+        "name": "Ricevi status",
+        "topic": "/petfeeder/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "hivemq_config",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "158a6a254b0f5719",
+                "1ffa2dda8bd4819d"
+            ]
+        ]
+    },
+    {
+        "id": "158a6a254b0f5719",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Salva log erogazione",
+        "func": "\nconst animal_id = 1;\nconst grams = 100;\n\nmsg.params = [animal_id, grams];\nmsg.query = \"INSERT INTO dispenser_logs (animal_id, grams) VALUES ($1, $2)\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 160,
+        "wires": [
+            [
+                "43e54e3f5a530451"
+            ]
+        ]
+    },
+    {
+        "id": "43e54e3f5a530451",
+        "type": "postgresql",
+        "z": "ccb948fc121152fe",
+        "name": "db log erogazione",
+        "query": "INSERT INTO dispenser_logs(animal_id, grams, delivered_at) VALUES ($1, $2, NOW()); ",
+        "postgreSQLConfig": "605035cf0d177b7f",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 590,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "749511556c7b0ecc",
+        "type": "mqtt in",
+        "z": "ccb948fc121152fe",
+        "name": "Ricevi prossimità",
+        "topic": "/petfeeder/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "hivemq_config",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 120,
+        "y": 240,
+        "wires": [
+            [
+                "4f4bcc2a7adbd946",
+                "aeb997c9f8b294ec"
+            ]
+        ]
+    },
+    {
+        "id": "4f4bcc2a7adbd946",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Salva log prossimità",
+        "func": "const animal_id = 1;  // metti qui l'ID corretto dell'animale\nlet detected = true;\n\nif (typeof msg.payload === 'object' && msg.payload !== null) {\n    detected = msg.payload.detected === true;\n} else if (typeof msg.payload === 'string') {\n    detected = msg.payload.toLowerCase().includes('erogazione completata');\n}\n\nmsg.params = [animal_id, detected];\nmsg.query = \"INSERT INTO proximity_log (animal_id, detected, timestamp) VALUES ($1, $2, NOW())\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 240,
+        "wires": [
+            [
+                "c9474b2b8b5716f6"
+            ]
+        ]
+    },
+    {
+        "id": "c9474b2b8b5716f6",
+        "type": "postgresql",
+        "z": "ccb948fc121152fe",
+        "name": "db log prossimità",
+        "query": "INSERT INTO proximity_log (animal_id, detected, timestamp) VALUES ($1, $2, NOW());",
+        "postgreSQLConfig": "6cb232d1ea4cf77d",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 590,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e894e08b568450d6",
+        "type": "mqtt in",
+        "z": "ccb948fc121152fe",
+        "name": "Auto Feed Trigger",
+        "topic": "/petfeeder/schedule",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "7d5bdd1b4421a6a3",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 150,
+        "y": 360,
+        "wires": [
+            [
+                "fe5024fdd6a74fbf"
+            ]
+        ]
+    },
+    {
+        "id": "fe5024fdd6a74fbf",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Comando Erogazione",
+        "func": "msg.payload = {\n    action: \"dispense\",\n    quantity: 50\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 360,
+        "wires": [
+            [
+                "82db23a1d6a2011f"
+            ]
+        ]
+    },
+    {
+        "id": "82db23a1d6a2011f",
+        "type": "mqtt out",
+        "z": "ccb948fc121152fe",
+        "name": "Invia comando a ESP32",
+        "topic": "/petfeeder/dispenser/cmd",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7d5bdd1b4421a6a3",
+        "x": 610,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e25349a9370ae271",
+        "type": "mqtt in",
+        "z": "ccb948fc121152fe",
+        "name": "Prossimità",
+        "topic": "/petfeeder/sensor/proximity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "7d5bdd1b4421a6a3",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "72ab2b85c11f3b2a"
+            ]
+        ]
+    },
+    {
+        "id": "72ab2b85c11f3b2a",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Verifica orario prossimo",
+        "func": "let now = new Date();\nlet schedTime = new Date(msg.payload.scheduled);\nlet diff = (schedTime - now) / 60000;\nif (diff <= 10 && diff > 0) {\n    return { payload: { action: \"dispense\", quantity: 50 } };\n} else {\n    return null;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 2,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 420,
+        "wires": [
+            [
+                "82db23a1d6a2011f"
+            ]
+        ]
+    },
+    {
+        "id": "1ffa2dda8bd4819d",
+        "type": "debug",
+        "z": "ccb948fc121152fe",
+        "g": "bf72596bd19b7bc0",
+        "name": "status_debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "8f079b0d2649c521",
+        "type": "debug",
+        "z": "ccb948fc121152fe",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "aeb997c9f8b294ec",
+        "type": "debug",
+        "z": "ccb948fc121152fe",
+        "name": "proximity_debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "4e8a9c91a0016c01",
+        "type": "mqtt in",
+        "z": "ccb948fc121152fe",
+        "name": "Ricevi allarme",
+        "topic": "/petfeeder/alert",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "7d5bdd1b4421a6a3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "baa23eaff87bfcb2"
+            ]
+        ]
+    },
+    {
+        "id": "baa23eaff87bfcb2",
+        "type": "function",
+        "z": "ccb948fc121152fe",
+        "name": "Salva log allarme",
+        "func": "const animal_id = 1; \nlet alarm_type = 'Accumolo rilevato';  \nlet handled = true;  \n\nif (typeof msg.payload === 'object' && msg.payload !== null) {\n    alarm_type = msg.payload.alarm_type || alarm_type;  // utilizza il tipo di allarme dal payload\n    handled = msg.payload.handled || handled;  // utilizza il flag \"handled\" dal payload\n} else if (typeof msg.payload === 'string') {\n    alarm_type = msg.payload.toLowerCase().includes('Accumolo rilevato') ? 'Accumolo rilevato' : 'altro';\n}\n\nmsg.params = [animal_id, alarm_type, handled];\nmsg.query = \"INSERT INTO alarm_log (animal_id, alarm_type, timestamp, handled, notes) VALUES ($1, $2, NOW(), $3, $4)\";\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "7b86eda4834576b0"
+            ]
+        ]
+    },
+    {
+        "id": "7b86eda4834576b0",
+        "type": "postgresql",
+        "z": "ccb948fc121152fe",
+        "name": "db log allarme",
+        "query": "INSERT INTO alarm_log (animal_id, alarm_type, timestamp, handled, notes)\nVALUES ($1, $2, NOW(), $3, $4);\n",
+        "postgreSQLConfig": "94d0e8851b74a2d5",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 600,
+        "y": 300,
+        "wires": [
+            [
+                "e9421843e6b6d698"
+            ]
+        ]
+    },
+    {
+        "id": "e9421843e6b6d698",
+        "type": "debug",
+        "z": "ccb948fc121152fe",
+        "name": "allarme_debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7ed30b6f68fe75b1",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "4ea2a974a3257acf",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "hivemq_config",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "nodered-web",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 15,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthQos": "0",
+        "willQos": "0"
+    },
+    {
+        "id": "605035cf0d177b7f",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "6cb232d1ea4cf77d",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "7d5bdd1b4421a6a3",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "94d0e8851b74a2d5",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "pet_feeder",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "www",
+        "userFieldType": "str",
+        "password": "tw2024",
+        "passwordFieldType": "str"
+    }
+]
