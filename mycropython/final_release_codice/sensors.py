@@ -3,6 +3,7 @@ import network
 from machine import Pin, PWM, ADC
 from time_manager import sync_time
 
+# SENSORE INFRAROSSO
 class IRSensor:
     def __init__(self, pin_num):
         self.sensor = Pin(pin_num, Pin.IN)

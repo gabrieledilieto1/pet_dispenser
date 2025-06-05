@@ -1,5 +1,5 @@
 <?php
-// proximity_suggestions.php
+
 
 include 'db.php'; // connessione al db PostgreSQL
 include 'header.php'; // Include l'header per la navigazione
@@ -13,7 +13,7 @@ $total_data = pg_fetch_assoc($res_total);
 $total = intval($total_data['total']);
 
 // 2) Conteggio rilevamenti fuori orari programmati
-// Qui definiamo per esempio orari erogazione fissi: 7-9 e 18-20 (da adattare in base al tuo sistema)
+// Qui definiamo per esempio orari erogazione fissi: 7-9 e 18-20
 $sql_off_hours = "
 SELECT COUNT(*) as off_total 
 FROM proximity_log 
