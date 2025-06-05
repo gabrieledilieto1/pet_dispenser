@@ -11,3 +11,6 @@ pet_dispenser/
 ├── micropython/       # Codice per microcontrollori (es. ESP32)
 ├── db/                # Tabelle DataBase pet_feeder
 
+
+##Link al powerpoint del progetto:
+https://1drv.ms/p/s!AoYqROIUPA-ggxgI1a7JWSOq_i5x
