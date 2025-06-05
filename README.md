@@ -12,5 +12,5 @@ pet_dispenser/
 ├── db/                # Tabelle DataBase pet_feeder
 
 
-##Link al powerpoint del progetto:
-https://1drv.ms/p/s!AoYqROIUPA-ggxgI1a7JWSOq_i5x
+
+[📎 Link al PowerPoint del progetto](https://1drv.ms/p/s!AoYqROIUPA-ggxgI1a7JWSOq_i5x)
