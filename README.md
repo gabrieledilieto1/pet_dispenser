@@ -13,4 +13,4 @@ pet_dispenser/
 
 
 
-[📎 Link al PowerPoint del progetto](https://1drv.ms/p/s!AoYqROIUPA-ggxgI1a7JWSOq_i5x)
+
