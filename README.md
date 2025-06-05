@@ -10,4 +10,4 @@ pet_dispenser/
 ├── node-red/          # Flow Node-RED per automazione e logica di controllo              
 ├── micropython/       # Codice per microcontrollori (es. ESP32)
 ├── db/                # Tabelle DataBase pet_feeder
-└── README.md          # Documentazione del progetto
+
