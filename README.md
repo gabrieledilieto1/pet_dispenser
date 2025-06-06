@@ -11,6 +11,5 @@ pet_dispenser/
 ├── micropython/       # Codice per microcontrollori (es. ESP32)
 ├── db/                # Tabelle DataBase pet_feeder
 
-
-
-
+### Correzione
+Controllare la presenza dei croccantini nel dispenser, nel caso non fossero presenti bloccare il dispositivo con un alarm. L'alarm deve prevedere un reset da parte dell'utente.
